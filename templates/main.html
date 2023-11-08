@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baseball Battle</title>
+    <link rel="icon" href="../static/logo.png" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        function toComputer()
+        {
+            window.location.href="{{ url_for('singleplayer') }}";
+        }
+        
+
+        // Add event listeners to all buttons
+        
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background:url('../static/background.avif');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        img{
+            width:55px;
+            height:55px;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            color: #fff;
+            margin-left: 10px;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid #ffffff00;
+            padding: 5px;
+            background-color: white;
+        }
+
+        .navbar-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 30px;
+    
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .btn {
+            width: 200px;
+            margin: 10px;
+            border-radius: 5px;
+            font-size: 18px;
+            padding: 10px;
+            text-transform: uppercase;
+        }
+
+        .btn-warning {
+            background-color: #f0ad4e;
+            border-color: #f0ad4e;
+        }
+
+        .btn-primary {
+            background-color: #5bc0de;
+            border-color: #5bc0de;
+        }
+
+        .btn-danger {
+            background-color: #d9534f;
+            border-color: #d9534f;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="modal fade" id="rulesModal" tabindex="-1" role="dialog" aria-labelledby="rulesModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title special" id="rulesModalLabel">Game Rules</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body col-sm-12 col-lg-12 col-xs-12 col-md-12">
+                    <!-- Add your game rules here -->
+                    <p class="special">Rules: How to decide who gets to bat or bowl? a player picks odd or even and says it out loud after which both of them will pick a number and say it out loud and if the sum of the two numbers said by the players is odd or even then the player that picks the number will decide whether he wants to bat or bowl. What is the game? Both players will get their role of batting or bowling and they will pick one number each and say it out loud at the same time, if the number said by both of them is the same, then that number will be doubled and added to the score of the batter and if the number picked by the bowler is 1 more than or less than the number picked by the batter the batter loses a strike and if it is unrelated then the batter gets the number he picked added to his score and after the batter loses all his strikes the bowler will now be the batter, this batter will have to beat the score set by the batter in order to win. How many players? If there is more than 1 player on each side, the game will be different, there will be a captain who will selected randomly and he will play the game that decides the batting team or bowling team and after that, he will choose what he wants to do and the other players will give him suggestions. He will pick the player that goes to bat first and bowl first and he can also swap the players(which means he can choose who can bowl or bat at that time among his team) if he wants to in the middle of the match and he can also relinquish his position to the others. There will also be 1v4, 1v5, and 1v6 mismatches in which a single player with 12 15, or 18 strikes (depending on the number of players in the opposing team) faces off against a group of players with 3 strikes each and if he was victorious he will gain a lot more points than a normal game. He can also play against a random number generator against a computer if he wants to. 
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar">
+        <div class="logo">
+            <img src="../static/logo.png" alt="logo" />
+        </div>
+        <div class="navbar-brand">BaseBall Battle</div>
+    </div>
+
+    <div class="navbar-icons">
+        <span class="glyphicon glyphicon-envelope" style="font-size: 24px; margin-right: 20px;"></span>
+        <span class="glyphicon glyphicon-stats" style="font-size: 24px;"></span>
+    </div>
+    <br>
+    <br>
+    <div class="profile">
+        <img id="profile" src="../static/user's profile pic.webp" alt="User Profile">
+        <div id="name">Krishna</div>
+    </div>
+
+    <div class="buttons">
+        <button type="button" onclick="toProfile();" class="btn btn-primary">Profile</button>        
+        <button type="button" class="btn btn-primary">Events</button>        
+        <button type="button" onclick="toComputer();" class="btn btn-primary">VS Computer</button>
+        <button type="button" onclick="toLobby()" class="btn btn-primary">Multiplayer</button>        
+        <button type="button" class="btn btn-primary">Guild</button>
+        <button type="button" data-toggle="modal" data-target="#rulesModal" class="btn btn-warning">How to Play</button>
+    </div>
+
+    <div class="logout-btn">
+        <button type="button" class="btn btn-danger">
+            <span class="glyphicon glyphicon-log-out"></span>
+        </button>
+    </div>
+
+    <!-- Include Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+         const firebaseConfig = {
+        apiKey: "AIzaSyD-BBshNUbgt-c1qiSyVqcMLGhf0iz864g",
+        authDomain: "baseball-37e0d.firebaseapp.com",
+        projectId: "baseball-37e0d",
+        storageBucket: "baseball-37e0d.appspot.com",
+        messagingSenderId: "422995163027",
+        appId: "1:422995163027:web:4b49ffa090ca952ad55a66",
+        measurementId: "G-792QSK4ZY7"
+};
+function toProfile()
+{
+    window.location.href="{{ url_for('profile') }}";
+}
+function toLobby()
+{
+    localStorage.setItem("PVPmode", "1v1");
+    window.location.href="{{ url_for('profile') }}";
+}
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();   
+        // Check local storage on page load
+    document.addEventListener("DOMContentLoaded", function() {
+        // Check if username key exists in local storage
+        if (localStorage.getItem('username') !== null) {
+            // Get the value from the username key in local storage
+            const username = localStorage.getItem('username');
+            document.getElementById("name").innerText=username
+
+            // Retrieve data from Firebase Realtime Database
+            
+            const usersRef = database.ref('users/' + username);
+
+            // Retrieve the data from Firebase
+            usersRef.once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();                    
+                    const profilePicture = userData['Profile pic'];
+                    document.getElementById("profile").src=profilePicture;                                
+
+                } else {
+                    console.log("User does not exist in the database.");
+                }
+            });
+        } else if (localStorage.getItem('phoneNumber') !== null) {
+            const phoneNumber = localStorage.getItem('phoneNumber');
+            const usersRef = database.ref('users/' + phoneNumber);
+            usersRef.once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();                    
+                    const username = userData['username'];
+                    const userref = database.ref('users/' + username);
+                    localStorage.setItem('username', username);
+                    userref.once('value', (snapshot) => {
+                        if (snapshot.exists()) {
+                            const userData = snapshot.val();                    
+                            const profilePicture = userData['Profile pic'];
+                            document.getElementById("profile").src=profilePicture;                                
+
+                        } else {
+                            console.log("User does not exist in the database.");
+                        }
+            });
+                                                   
+
+                } else {
+                    console.log("User does not exist in the database.");
+                }
+            });
+            // Handle the case where the phoneNumber key exists in local storage
+            // Your logic here
+        }
+    });
+    function playSoundEffect() {
+            var audio = new Audio('../static/select.wav');
+            audio.play();
+        }
+        document.body.addEventListener('click', function (event) {        
+          playSoundEffect();
+        
+      });
+    </script>
+</body>
+
+</html>

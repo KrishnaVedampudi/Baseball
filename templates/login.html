@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="../static/ogo.png" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        body {
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000;
+            color: #fff;
+        }
+
+        .container {
+            position: relative;
+            width: 400px;
+            padding: 40px;
+            border-radius: 10px;
+            background-color: #000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: fadeIn 1s both;
+            border: 2px solid #fff;
+        }
+
+        .center-div {
+            text-align: center;
+        }
+
+        .new {
+            padding: 20px;
+        }
+
+        .login-form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid #fff;
+            background-color: #000;
+            color: #fff;            
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            
+        }
+
+        .btn-login:hover {
+            background-color: #45a049;
+        }
+        h1
+        {
+            font-size:20px !important;
+        }
+
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+             
+        }
+    </style>
+</head>
+
+
+
+<body>
+         
+    <div class="container">
+
+        <div class="row">
+            <div class="center-div">
+                <div class="img-container">
+                    <h1 class="btn btn-warning">BaseBall Battle</h1>
+                </div>
+
+                <div class="new">
+                    <center>
+                        <p>Welcome to Base Ball battle.</p>
+                        <p>Please Sign in to your account</p>
+                    </center>
+                </div>
+                <div class="login-form">
+                    <div class="form-group">
+                        <input id="username" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <input id="password" placeholder="Password">
+                    </div>             
+                    <div class="form-group">
+                        <input id="phone" placeholder="Recovery Number">
+                    </div>       
+                    <button onclick="signIn()" class="btn-login">Log In</button>
+                </div>
+                <br>
+                <center>
+                <div id="recaptcha-container"></div>
+            </center>
+                <br>
+                <a href="{{ url_for('signup') }}">Don't have an account? Click here to Sign Up</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</body>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyD-BBshNUbgt-c1qiSyVqcMLGhf0iz864g",
+        authDomain: "baseball-37e0d.firebaseapp.com",
+        projectId: "baseball-37e0d",
+        storageBucket: "baseball-37e0d.appspot.com",
+        messagingSenderId: "422995163027",
+        appId: "1:422995163027:web:4b49ffa090ca952ad55a66",
+        measurementId: "G-792QSK4ZY7"
+};
+function playSoundEffect() {
+            var audio = new Audio('../static/select.wav');
+            audio.play();
+        }
+
+        // Add event listeners to all buttons
+        var buttons = document.getElementsByTagName("button");
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener("click", playSoundEffect);
+        }
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();   
+    firebase.auth().settings.appVerificationDisabledForTesting = false;    // Set up the recaptcha verifier
+    const applicationVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+    applicationVerifier.render(); 
+function signIn() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    firebase.database().ref('users/' + username).once('value', (snapshot) =>{
+        const userData = snapshot.val();
+        if (userData && userData.password === password) {
+            // Allow login
+            alert('Login successful');
+            localStorage.setItem('username', username); 
+            window.location.href="{{ url_for('main') }}";
+        } else {
+            // Deny login
+            alert('Invalid username or password. You can choose to get send recovery code or try again!');
+            const enteredCode = prompt("Please enter 'try again' or 'send recovery code':");  
+            if (enteredCode == 'send recovery code')                
+            {
+                window.location.href = "{{ url_for('verification') }}";
+                                                           
+            }  
+            else if (enteredCode == 'try again')   
+            {
+                alert("Try again!");
+            }      
+
+        }
+    });
+}
+
+</script>
+<script>
+    document.body.addEventListener('click', function (event) {        
+          playSoundEffect();
+      });
+      function playSoundEffect() {
+            var audio = new Audio('../static/select.wav');
+            audio.play();
+        }
+
+</script>
+</html>

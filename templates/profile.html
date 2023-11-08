@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="..static/logo.png" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaseBall Battle</title>
+    <!-- Bootstrap CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts - Orbitron -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background:url('background.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+            background-color: #000;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 35px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            margin-bottom: 20px;
+            background-color: white;
+            justify-content: center;
+        }
+
+        .profile-pic {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            margin-bottom: 30px;
+        }
+
+        .stats div {
+            margin-bottom: 10px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            width: 200px;
+            margin: 10px;
+            border-radius: 5px;
+            font-size: 18px;
+            padding: 10px;
+            text-transform: uppercase;
+        }
+        .btn-danger
+        {
+            width:50px !important;
+        }
+
+        .modal-dialog {
+            max-width: 80% !important;
+            color:black;
+        }
+
+        .modal-body {
+            height: fit-content;
+            font-size: 12px;
+        }
+        .btn-success {
+            background-color: #5cb85c;
+            border-color: #5cb85c;
+        }
+
+        .btn-info {
+            background-color: #5bc0de;
+            border-color: #5bc0de;
+        }
+
+        .btn-primary {
+            background-color: #0275d8;
+            border-color: #0275d8;
+            width:95%;
+        }
+        .exit-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px;            
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .stats {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .stat-item {
+        width: 30%;
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .stat-label {
+        font-weight: bold;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="exit-btn">
+            <button type="button" onclick="exit()"class="btn btn-danger">
+                <span class="glyphicon glyphicon-log-out"></span>
+            </button>
+        </div>
+        <center>
+        <div class="logo">
+            
+            <img style="margin-top:5px;" width="85px" height="85px" src="../static/logo.png" alt="Game Logo">
+        </div>
+    </center>
+        <div id="name" class="name">Krishna</div>
+        <img id="profile" class="profile-pic" src="../static/user's profile pic.webp" alt="Profile Picture">
+    </div>
+
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-label">Matches Won</div>
+            <div id="stat-value-MW">57</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Matches Lost</div>
+            <div id="stat-value-ML">10</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Titles Gained</div>
+            <div id="stat-value-NT">3</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Best Score</div>
+            <div id="stat-value-BS">235</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Most strikes in one match</div>
+            <div id="stat-value-MS">5</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Matches Played</div>
+            <div id="stat-value-MP">67</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Current Rank</div>
+            <div id="stat-value-CR">5th</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Unique Items Won</div>
+            <div id="stat-value-UT">1</div>
+        </div>
+
+    </div>
+
+    <div class="buttons">
+        <button type="button" onclick="showFriendRequestModal()" class="btn btn-success">Friend request received</button>        
+        <button type="button" onclick="sendFriendRequest()" class="btn btn-primary">Send a New Friend Request</button>
+        <button type="button" class="btn btn-primary">Change Password</button>
+        <button type="button" class="btn btn-primary">Change recovery phone number</button>
+        <button type="button" class="btn btn-primary">Friends</button>
+    </div>
+
+    <div  class="modal fade" id="friendRequestModal" tabindex="-1" aria-labelledby="friendRequestModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="friendRequestModalLabel">Friend Request</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div id="usernames" style="max-height: 200px; overflow-y: auto;">
+                <!-- Usernames will be added here -->
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" onclick="acceptFriendRequest()">Accept</button>
+              <button type="button" class="btn btn-danger" onclick="denyFriendRequest()">Deny</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+         const firebaseConfig = {
+        apiKey: "AIzaSyD-BBshNUbgt-c1qiSyVqcMLGhf0iz864g",
+        authDomain: "baseball-37e0d.firebaseapp.com",
+        projectId: "baseball-37e0d",
+        storageBucket: "baseball-37e0d.appspot.com",
+        messagingSenderId: "422995163027",
+        appId: "1:422995163027:web:4b49ffa090ca952ad55a66",
+        measurementId: "G-792QSK4ZY7"
+};
+function exit()
+{
+    window.location.href="{{ url_for('main') }}";
+}
+function acceptFriendRequest()
+{
+    console.log('accepted');
+}
+function denyFriendRequest()
+{
+    console.log('denied');
+}
+    // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();   
+         document.addEventListener("DOMContentLoaded", function() {
+        
+        if (localStorage.getItem('username') !== null) {
+            
+            const username = localStorage.getItem('username');
+            
+            
+            const usersRef = database.ref('users/' + username);
+
+            // Retrieve the data from Firebase
+            usersRef.once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    document.getElementById("name").innerText = username;
+                    document.getElementById("profile").src = userData["Profile pic"];
+                    if (userData["Matches played"] == "")
+                    {
+                    document.getElementById("stat-value-MW").innerText = "Play a match now";
+                    document.getElementById("stat-value-ML").innerText = "Play a match now";
+                    document.getElementById("stat-value-NT").innerText = "Play a match now";
+                    document.getElementById("stat-value-BS").innerText = "Play a match now";
+                    document.getElementById("stat-value-MS").innerText = "Play a match now";
+                    document.getElementById("stat-value-MP").innerText = "Play a match now";
+                    document.getElementById("stat-value-CR").innerText = "Play a match now";
+                    document.getElementById("stat-value-UT").innerText = "Play a match now";
+                    }else
+                    {                    
+                    document.getElementById("stat-value-MW").innerText = userData["Total matches won"];
+                    document.getElementById("stat-value-ML").innerText = userData["Total matches lost"];
+                    document.getElementById("stat-value-NT").innerText = userData["Number of titles"];
+                    document.getElementById("stat-value-BS").innerText = userData["Best score"];
+                    document.getElementById("stat-value-MS").innerText = userData["Most strikes"];
+                    document.getElementById("stat-value-MP").innerText = userData["Matches played"];
+                    document.getElementById("stat-value-CR").innerText = userData["Rank"];
+                    document.getElementById("stat-value-UT").innerText = userData["Unique items"];
+                    }
+                } else {
+                    console.log("User does not exist in the database.");
+                }
+            });
+        }
+    });    
+
+    // Function to send a friend request
+    function sendFriendRequest() {
+        const username = localStorage.getItem('username');
+        const friendUsername = prompt("Enter the username to send a friend request:");
+
+        if (friendUsername !== null) {
+            // Update the value in the Firebase Realtime Database
+            database.ref('users/' + friendUsername).child('Friend request received').set(username)  
+                .then(() => {
+                    if(snapshot.exists()){
+                    alert('Friend request sent successfully!');
+                    }else{
+                        alert("There is no user with that name!")
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error sending friend request:', error);
+                });
+                database.ref('users/' + username).child('Friend request sent').set(friendUsername)
+                .then(() => {
+                    alert('Friend request sent successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error sending friend request:', error);
+                });
+            
+        }
+    
+    }
+    function showFriendRequestModal() {
+        const username = localStorage.getItem('username');
+        const usernamesDiv = document.getElementById('usernames');
+        usernamesDiv.innerHTML = ''; // Clear the previous content
+
+        // Retrieve the list of usernames from the Firebase Realtime Database
+        const database = firebase.database();
+        const usersRef = database.ref('users/' + username + '/Friend request received');
+        usersRef.once('value', (snapshot) => {
+            if (snapshot.exists()) {
+                const usernames = snapshot.val();
+                if (usernames) {
+                    Object.keys(usernames).forEach(key => {
+                        const div = document.createElement('div');
+                        div.textContent = usernames[key];
+                        usernamesDiv.appendChild(div);
+                    });
+                }
+            }
+        });
+
+        // Show the Bootstrap modal
+        var myModal = new bootstrap.Modal(document.getElementById('friendRequestModal'));
+        myModal.show();
+    }
+    </script>
+</body>
+
+</html>

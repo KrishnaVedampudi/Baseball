@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Game Title</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts - Orbitron -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+         body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            text-align:center;
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        .item-container {
+            display: flex;
+            flex-direction: column;
+            width: 35%;
+            justify-content: space-between;
+        }
+
+        .item {
+            border: 1px solid #5bc0de;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .player-list {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin: 20px;
+        }
+
+        .player-item {
+            display: flex;
+            align-items: center;
+            margin: 5px;
+        }
+
+        .player-item span {
+            margin-right: 5px;
+        }
+
+        .number-container {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin: 20px;
+            position: fixed;
+            bottom: 0;
+            background-color: rgba(128, 128, 128, 0.177);
+            padding:10px;
+            border-radius:15px;
+        }
+
+        .number {
+            border: 1px solid #5bc0de;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 5px;
+            background-color: black;
+        }
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .icon {
+            width: 100px;
+            height: 100px;
+            margin: 20px;
+            border-radius:90px;
+        }
+          /* Styles for the modal */
+          .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;            
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .exit-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px;            
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-content {
+            background-color: black;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            text-align: center;
+        }
+
+        .close {
+            color: rgb(218, 216, 216);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="exit-btn">
+        <button type="button" onclick="exit()"class="btn btn-danger">
+            <span class="glyphicon glyphicon-log-out"></span>
+        </button>
+    </div>
+    <h1>Baseball Battle</h1>
+    <h2>Welcome to the training grounds where you battle with our bot</h2>
+    <div id="gameStatus">
+        <div id="strikes"></div>
+        <div id="score"></div>
+        <div id="genstrikes"></div>
+        <div id="genscore"></div>
+        <div id="battingStatus"></div>
+    </div>
+    <div class="center-container">
+        <img src="..static/user's profile pic.webp" alt="Human Icon" class="icon">
+        <div style="width: 20px;"></div> <!-- Space between icons -->
+        <img src="../static/bot.png" alt="Computer Icon" class="icon">
+    </div>
+    <div class="number-container">
+        <div class="number" onclick="storeNumber(this)">1</div>
+        <div class="number" onclick="storeNumber(this)">2</div>
+        <div class="number" onclick="storeNumber(this)">3</div>
+        <div class="number" onclick="storeNumber(this)">4</div>
+        <div class="number" onclick="storeNumber(this)">5</div>
+        <div class="number" onclick="storeNumber(this)">6</div>
+        <div class="number" onclick="storeNumber(this)">7</div>
+        <div class="number" onclick="storeNumber(this)">8</div>
+        <div class="number" onclick="storeNumber(this)">9</div>
+        <div class="number" onclick="storeNumber(this)">10</div>
+        
+        
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h3>Choose Odd or Even</h3>
+                <button class="number" onclick="chooseOption('odd')">Odd</button>
+                <button class="number" onclick="chooseOption('even')">Even</button>
+            </div>
+        </div>
+    
+        <div class="modal" id="resultModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Congratulations!</h4>
+                  <button type="button" class="close" data-dismiss="modal" onclick="closeoption()">&times;</button>
+                </div>
+                <div class="modal-body">
+                  <p>Please choose your next action:</p>
+                  <button type="button" class="btn btn-success" data-dismiss="modal" onclick="setStatus('Batting')">Batting</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="setStatus('Bowling')">Bowling</button>
+                </div>                
+              </div>
+            </div>
+          </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+        apiKey: "AIzaSyD-BBshNUbgt-c1qiSyVqcMLGhf0iz864g",
+        authDomain: "baseball-37e0d.firebaseapp.com",
+        projectId: "baseball-37e0d",
+        storageBucket: "baseball-37e0d.appspot.com",
+        messagingSenderId: "422995163027",
+        appId: "1:422995163027:web:4b49ffa090ca952ad55a66",
+        measurementId: "G-792QSK4ZY7"
+         
+        }
+         document.addEventListener("DOMContentLoaded", function() {
+        
+        if (localStorage.getItem('username') !== null) {
+            
+            const username = localStorage.getItem('username');
+            
+            
+            const usersRef = database.ref('users/' + username);
+
+            // Retrieve the data from Firebase
+            usersRef.once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    document.getElementById("name").innerText = username;
+                    document.getElementById("profile").src = userData["Profile pic"];
+                }else{
+                    console.log("error");
+                }
+            });
+        }else{
+            console.log("error");
+        }});
+        let selectedNumber = null;
+        let playerScore = 0;
+        let playerStrikes = 0;
+        let generatorStrikes = 0;
+        let generatorScore = 0;
+        let status = null;
+        let gameStatusDiv = document.getElementById("gameStatus");
+        let strikesDiv = document.getElementById("strikes");
+        let scoreDiv = document.getElementById("score");
+        let battingStatusDiv = document.getElementById("battingStatus");
+        let generatorStrikesDiv = document.getElementById("genstrikes");
+        let generatorScoreDiv = document.getElementById("genscore");
+        let chosen_option = null;
+
+        function setStatus(chosen_status)
+        {
+            status = chosen_status;                       
+        }
+
+        function exit()
+{
+    window.location.href="{{ url_for('main') }}";
+}
+
+        function closeoption() {
+            let modal = document.getElementById("resultModal");
+            modal.style.display = "none";
+        }
+
+        function closeModal() {
+            let modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+        window.onload = function() {
+        var modal = document.getElementById('myModal');
+        modal.style.display = "block";
+        };
+
+        function chooseOption(option) {
+            chosen_option = option;      
+            closeModal();
+        }
+
+        function storeNumber(element) {
+            selectedNumber = parseInt(element.innerText);
+            if(status==null){                
+                console.log("Selected Number: " + selectedNumber);
+                playGame(selectedNumber,chosen_option);
+            }  
+            else
+            {
+                loop(status, selectedNumber)
+            }
+        }
+        function generateRandomNumber() {
+            return Math.floor(Math.random() * 10) + 1;
+        }
+
+        function playGame(selectedNumber,chosen_option) {
+    let randomNumber = generateRandomNumber();
+    let sum = selectedNumber + randomNumber;
+
+    if (status != null) {
+        loop(status, selectedNumber);
+    } else {
+        if(sum%2!=0)
+        {
+            if(chosen_option=='odd')
+            {
+                var modal = document.getElementById('resultModal');
+                modal.style.display = "block";
+            }else if(chosen_option=='even')
+            {
+                status="Bowling";
+                alert("The bot chose batting, since you lost odd or even");
+            }
+        }else if(sum%2==0)
+        {
+            if(chosen_option=='even')
+            {
+                var modal = document.getElementById('resultModal');
+                modal.style.display = "block";
+            }else if(chosen_option=='odd')
+            {
+                status="Bowling";
+                alert("The bot chose batting, since you lost odd or even");
+            }
+        }
+        console.log('Status changed');
+        strikesDiv.innerText = "Strikes: " + playerStrikes;
+        scoreDiv.innerText = "Score: " + playerScore;
+        battingStatusDiv.innerText = "Status: " + status;
+        loop(status, selectedNumber); // Call loop function here
+
+           // Call loop function here
+       
+
+        console.log("Player Score: " + playerScore);
+        console.log("Strikes: " + playerStrikes);
+    }
+}
+
+
+        function loop(status, selectedNumber) {
+            if (playerStrikes < 3 && generatorStrikes == 3) {                        
+                    status = "Batting";
+                    console.log(status);
+            }else if(playerStrikes == 3 && generatorStrikes <3)
+            {
+                status="Bowling";
+            }
+            if (status == "Batting") {
+                console.log("game loop");
+                let playerPick = selectedNumber;
+                let generatorPick = generateRandomNumber();
+                if (playerPick == generatorPick) {
+                    playerScore = playerScore+generatorPick*2;
+                } else if (Math.abs(playerPick - generatorPick) == 1) {
+                    playerStrikes++;
+                    if (playerStrikes == 3 && generatorStrikes<3) {                        
+                        status = "Bowling";
+                        console.log(status);
+                    }
+                     else if(playerStrikes == 3 && generatorStrikes == 3) 
+                     {
+                        if (playerScore - generatorScore > 0) {
+                            alert("Player Won!");
+                            status = null;
+                            playerStrikes=0;
+                            playerScore=0;
+                            generatorStrikes=0;
+                            generatorScore=0;
+                            alert("Would you like a rematch?");
+                            playGame();
+                        } else {
+                            alert("Bot Won!");
+                            status = null;
+                            playerStrikes=0;
+                            playerScore=0;
+                            generatorStrikes=0;
+                            generatorScore=0;
+                            alert("Would you like a rematch?");
+                            playGame();
+                        }
+                    }else if (playerStrikes == 3 && playerScore == 0) {
+                        status = "Bowling";
+                      }
+                    
+                } else {
+                    playerScore += playerPick;
+                }
+            }
+            if (status == "Bowling") {
+                let playerPick = selectedNumber;
+                let generatorPick = generateRandomNumber();
+                if (playerPick == generatorPick) {
+                    generatorScore = generatorScore+playerPick*2;
+                } else if (Math.abs(playerPick - generatorPick) == 1) {
+                    generatorStrikes++;
+                    if (generatorStrikes== 3 && playerStrikes<3) {
+                        status = "Batting";
+                    } else if (generatorStrikes == 3 && playerStrikes==3) {
+                        if (playerScore - generatorScore > 0) {
+                            alert("Player Won!");
+                            status = null;
+                            playerStrikes=0;
+                            playerScore=0;
+                            generatorStrikes=0;
+                            generatorScore=0;
+                            alert("Would you like a rematch?");
+                            playGame();
+                        } else {
+                            alert("Bot Won!");
+                            status = null;
+                            playerStrikes=0;
+                            playerScore=0;
+                            generatorStrikes=0;
+                            generatorScore=0;
+                            alert("Would you like a rematch?");
+                            
+                        }
+                    }else if (generatorStrikes == 3 && generatorScore == 0) {
+                        status = "Batting";
+                      }
+                } else {
+                    generatorScore += generatorPick;
+                }
+            }
+            strikesDiv.innerText = "Strikes: " + playerStrikes;
+            scoreDiv.innerText = "Score: " + playerScore;
+            battingStatusDiv.innerText = "Status: " + status;
+            generatorStrikesDiv.innerText = "Strikes: " + generatorStrikes;
+            generatorScoreDiv.innerText = "Score: " + generatorScore;
+            battingStatusDiv.innerText = "Status: " + status;
+        }
+        function playSoundEffect() {
+            var audio = new Audio('../static/select.wav');
+            audio.play();
+        }
+
+        // Add event listeners to all buttons
+        var buttons = document.getElementsByTagName("button");
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener("click", playSoundEffect);
+        }
+
+        // Example usage of the functions
+        storeNumber(); // Example selected number
+        playGame();
+    </script>
+    </body>
+    </html>

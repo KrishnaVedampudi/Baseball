@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Game Title</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts - Orbitron -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+         body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            text-align:center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }        
+
+    .item-container {
+        display: flex;
+        flex-direction: column;
+        width: 35%;
+        justify-content: space-between;
+    }
+
+    .item-container.left {
+        float:left;
+        margin-right: 50%;
+        
+        justify-content: flex-start;
+    }
+
+    .item-container.right {
+        float:right;
+        margin-left: 50%;
+        
+        justify-content: flex flex-end;
+    }
+
+        .item {
+            border: 1px solid #5bc0de;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .team-stats-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+            height:fit-content;
+            padding:10px;
+            background-color: red;
+            border-radius:15px;
+        }
+
+        .team-stats {
+            display: flex;
+            justify-content: space-between;
+        }
+
+    .main-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        margin-top: 20px;
+    }
+
+        .player-list {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin: 20px;
+        }
+
+        .player-item {
+            display: flex;
+            align-items: center;
+            margin: 5px;
+        }
+
+        .player-item span {
+            margin-right: 5px;
+        }
+
+        .number-container {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin: 20px;
+            position: fixed;
+            bottom: 0;
+            background-color: rgba(128, 128, 128, 0.177);
+            padding:10px;
+            border-radius:15px;
+        }
+
+      
+        .number {
+            border: 1px solid #5bc0de;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 5px;
+        }
+
+        /* Other CSS styles remain the same */
+        /* ... */
+    </style>
+</head>
+
+<body>
+    <h1>Baseball Battle</h1>
+    <h2>Welcome to the arena where you battle it out with your opponent(s)</h2>
+
+    
+      <div class="team-stats-container">
+      <div class="team-stats">
+        <div>
+            Team A Score: 50
+            <br>
+            Strikes Lost: 2
+            <br>
+            Players: 5
+            <br>
+            Team Name: Team A
+        </div>
+        <div>
+            Team B Score: 40
+            <br>
+            Strikes Lost: 1
+            <br>
+            Players: 4
+            <br>
+            Team Name: Team B
+        </div>
+    </div>
+  </div>    
+    <br>
+    <div class="main-container">
+        <div class="item-container left">
+        <span class="arrow-up" id="arrowUp" aria-hidden="true">▲</span>
+        <div class="item" onclick="selectItem(1)"><div class="player-item">
+              <span>Player 1</span>
+              <span>Score: 100</span>
+              <span>Strikes Lost: 2</span>
+              <span>⭐</span>
+          </div>
+        </div>
+        <div class="item" onclick="selectItem(2)">
+              <div class="player-item">
+                <span>Player 2</span>
+                <span>Score: 90</span>
+                <span>Strikes Lost: 1</span>
+            </div>
+        </div>
+        <div class="item" onclick="selectItem(3)">
+          <div class="player-item">
+            <span>Player 3</span>
+            <span>Score: 85</span>
+            <span>Strikes Lost: 0</span>              
+        </div>
+        </div>
+        <div class="item" onclick="selectItem(4)">
+          <div class="player-item">
+            <span>Player 4</span>
+            <span>Score: 80</span>
+            <span>Strikes Lost: 3</span>
+        </div>
+        </div>
+        <div class="item" onclick="selectItem(5)">
+          <div class="player-item">
+            <span>Player 5</span>
+            <span>Score: 75</span>
+            <span>Strikes Lost: 1</span>
+        </div>
+        </div>
+        </div>
+
+        <div class="item-container right">
+          <span class="arrow-up" id="arrowUp" aria-hidden="true">▲</span>
+          <div class="item" onclick="selectItem(1)"><div class="player-item">
+                <span>Player 1</span>
+                <span>Score: 100</span>
+                <span>Strikes Lost: 2</span>
+                <span>⭐</span>
+            </div>
+          </div>
+          <div class="item" onclick="selectItem(2)">
+                <div class="player-item">
+                  <span>Player 2</span>
+                  <span>Score: 90</span>
+                  <span>Strikes Lost: 1</span>
+              </div>
+          </div>
+          <div class="item" onclick="selectItem(3)">
+            <div class="player-item">
+              <span>Player 3</span>
+              <span>Score: 85</span>
+              <span>Strikes Lost: 0</span>              
+          </div>
+          </div>
+          <div class="item" onclick="selectItem(4)">
+            <div class="player-item">
+              <span>Player 4</span>
+              <span>Score: 80</span>
+              <span>Strikes Lost: 3</span>
+          </div>
+          </div>
+          <div class="item" onclick="selectItem(5)">
+            <div class="player-item">
+              <span>Player 5</span>
+              <span>Score: 75</span>
+              <span>Strikes Lost: 1</span>
+          </div>
+            <span class="arrow-down" id="arrowDown" aria-hidden="true">▼</span>
+        </div>
+        
+    </div>
+  </div>
+  </div>   
+    <div class="number-container">
+        <div class="number">1</div>
+        <div class="number">2</div>
+        <div class="number">3</div>
+        <div class="number">4</div>
+        <div class="number">5</div>
+        <div class="number">6</div>
+        <div class="number">7</div>
+        <div class="number">8</div>
+        <div class="number">9</div>
+        <div class="number">10</div>
+    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>
+
+
+  <!-- Include Bootstrap JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <script>
+   let selected = null;
+        let items = document.querySelectorAll('.item');
+        let arrowUp = document.getElementById('arrowUp');
+        let arrowDown = document.getElementById('arrowDown');
+
+        function selectItem(id) {
+            let index = id - 1;
+            if (selected) {
+                selected.classList.remove('selected');
+            }
+            selected = items[index];
+            selected.classList.add('selected');
+            adjustItems(index);
+        }
+
+        function adjustItems(index) {
+            items.forEach((item, i) => {
+                if (i < index - 1 || i > index + 1) {
+                    item.style.display = 'none';
+                } else {
+                    item.style.display = 'block';
+                }
+            });
+
+            // Adjust arrow visibility
+            if (index > 0) {
+                arrowUp.style.display = 'block';
+            } else {
+                arrowUp.style.display = 'none';
+            }
+
+            if (index < items.length - 1) {
+                arrowDown.style.display = 'block';
+            } else {
+                arrowDown.style.display = 'none';
+            }
+        }
+
+        function playSoundEffect() {
+            var audio = new Audio('select.mp3');
+            audio.play();
+        }
+
+        // Add event listeners to all buttons
+        var buttons = document.getElementsByTagName("button");
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener("click", playSoundEffect);
+        }
+        // Show the first two items initially
+        items[0].style.display = 'block';
+        items[1].style.display = 'block';
+  </script>
+</body>
+</html>

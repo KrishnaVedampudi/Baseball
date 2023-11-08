@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baseball Battle</title>
+    <link rel="icon" href="../static/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        /* Custom CSS */
+        body {
+            background-color: #1a1a1a;
+            color: #f5f5f5;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #333;
+        }
+
+        .banner {
+            text-align: center;
+            padding: 30px 0;            
+            background-size: cover;
+            background-position: center;
+            color: #f5f5f5;
+        }
+
+        .container {
+            text-align: center;
+            padding: 30px 10px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            max-width: 100px;
+            max-height: 100px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #4CAF50;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-dialog {
+            max-width: 80% !important;
+            color:black;
+        }
+
+        .modal-body {
+            height: fit-content;
+            font-size: 12px;
+        }
+        #strikeMessage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-weight: bold;
+            padding: 10px;            
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #strikeMessage.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        #strikeMessage div {
+            margin: 10px;
+        }
+    </style>
+</head>
+<script>
+    function playSoundEffect() {
+            var audio = new Audio('../static/select.wav');
+            audio.play();
+        }
+        let strikes=3;
+        function simulateStrike() {
+            // Display the strike message
+            const strikeMessage = document.getElementById('strikeMessage');
+            strikeMessage.innerText = 'You lost a strike!';
+            strikeMessage.style.display = 'block';
+
+            // After 3 seconds, hide the strike message
+            setTimeout(function() {
+                strikeMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        // Add event listeners to all buttons
+        
+         // Number of strikes allowed
+
+function simulateStrike() {
+    const strikeMessage = document.getElementById('strikeMessage');
+    const strikeText = document.getElementById('strikeText');
+    const strikesLeft = document.getElementById('strikesLeft');
+
+    if (strikes > 0) {
+        strikeText.innerText = 'You lost a strike!';
+        strikesLeft.innerText = 'Strikes left: ' + (--strikes);
+        strikeMessage.style.display = 'flex';
+
+        setTimeout(function() {
+            strikeMessage.style.display = 'none';
+        }, 3000);
+    } else {
+        strikesLeft.innerText = 'No strikes left!';
+    }
+}
+window.onload = function() {
+            const strikeMessage = document.getElementById('strikeMessage');
+            strikeMessage.style.display = 'none';
+        };
+</script>
+<body>
+    <div class="header">
+        <img class="logo" src="../static/logo.png" alt="Game Logo">
+        <h1>Baseball Battle</h1>
+    </div>
+
+    <div class="banner">
+        <h2>Welcome to the Ultimate Baseball Showdown!</h2>
+        <br>
+        <img style="border-radius: 10px; width: 80%;" src="../static/BY Krishna.png">
+    </div>
+
+    <div class="container">
+        <p>Play ball and dominate the field with your strategic skills!</p>
+        <p>Developed by: <span id="creators">Syam</span></p>
+        <p>Created by: Krishna</p>
+        <p>Designed by: Both</p>
+        <p>In partnership with: Satwik and Sriram</p>
+        <button data-toggle="modal" data-target="#rulesModal">Rules</button>
+        <button data-toggle="modal" data-target="#featuresModal">Features</button>
+        <a href="{{ url_for('signup') }}">
+            <button>Sign-Up</button>
+        </a>
+        <a href="{{ url_for('login') }}">
+            <button>Login</button>
+        </a>
+       
+    </div>
+
+ 
+    
+
+    <!-- Rules Modal -->
+    <div class="modal fade" id="rulesModal" tabindex="-1" role="dialog" aria-labelledby="rulesModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title special" id="rulesModalLabel">Game Rules</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body col-sm-12 col-lg-12 col-xs-12 col-md-12">
+                    <!-- Add your game rules here -->
+                    <p class="special">Rules: How to decide who gets to bat or bowl? a player picks odd or even and says it out loud after which both of them will pick a number and say it out loud and if the sum of the two numbers said by the players is odd or even then the player that picks the number will decide whether he wants to bat or bowl. What is the game? Both players will get their role of batting or bowling and they will pick one number each and say it out loud at the same time, if the number said by both of them is the same, then that number will be doubled and added to the score of the batter and if the number picked by the bowler is 1 more than or less than the number picked by the batter the batter loses a strike and if it is unrelated then the batter gets the number he picked added to his score and after the batter loses all his strikes the bowler will now be the batter, this batter will have to beat the score set by the batter in order to win. How many players? If there is more than 1 player on each side, the game will be different, there will be a captain who will selected randomly and he will play the game that decides the batting team or bowling team and after that, he will choose what he wants to do and the other players will give him suggestions. He will pick the player that goes to bat first and bowl first and he can also swap the players(which means he can choose who can bowl or bat at that time among his team) if he wants to in the middle of the match and he can also relinquish his position to the others. There will also be 1v4, 1v5, and 1v6 mismatches in which a single player with 12 15, or 18 strikes (depending on the number of players in the opposing team) faces off against a group of players with 3 strikes each and if he was victorious he will gain a lot more points than a normal game. He can also play against a random number generator against a computer if he wants to. 
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Modal -->
+    <div class="modal fade" id="featuresModal" tabindex="-1" role="dialog" aria-labelledby="featuresModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title special" id="featuresModalLabel">Game Features</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Add your game features here -->
+                    <p class="special">
+                        Skins, events, seasons, custom matches, leaderboard, custom hand signs, friends list, guilds, custom maps, and many more features will be coming soon...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+<script>
+    document.body.addEventListener('click', function (event) {        
+          playSoundEffect();
+        
+      });
+</script>
+</html>
+

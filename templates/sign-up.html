@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="../static/logo.png" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+.radio-container {
+      display: block;
+      position: relative;
+      padding-left: 35px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      font-size: 22px;
+    }
+
+    .radio-container input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 25px;
+      width: 25px;
+      background-color: #eee;
+      border-radius: 5px;
+    }
+
+    .radio-container:hover input ~ .checkmark {
+      background-color: #ccc;
+    }
+
+    .radio-container input:checked ~ .checkmark {
+      background-color: #2196F3;
+    }
+
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+
+    .radio-container input:checked ~ .checkmark:after {
+      display: block;
+    }
+
+    .radio-container .checkmark:after {
+      left: 9px;
+      top: 5px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      transform: rotate(45deg);
+    }
+    
+        body {
+            font-family: 'Orbitron', cursive;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000;
+            color: #fff;
+        }
+
+        .container {
+            position: relative;
+            width: 400px;
+            padding: 40px;
+            border-radius: 10px;
+            background-color: #000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: fadeIn 1s both;
+            border: 2px solid #fff;
+        }
+
+        .center-div {
+            text-align: center;
+        }
+
+        .new {
+            padding: 20px;
+        }
+
+        .login-form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid #fff;
+            background-color: #000;
+            color: #fff;
+            
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            
+        }
+
+        .btn-login:hover {
+            background-color: #45a049;
+        }
+        h1
+        {
+            font-size:20px !important;
+        }
+
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+            
+        }
+    </style>
+</head>
+
+
+
+<body>
+         
+    <div class="container">
+        <div class="row">
+            <div class="center-div">
+                <div class="img-container">
+                    <h1 class="btn btn-warning">BaseBall Battle</h1>
+                </div>
+
+                <div class="new">
+                    <center>
+                        <p>Welcome to Base Ball battle.</p>
+                        <p>Please sign up to create an account.</p>
+                    </center>
+                </div>
+                <div class="login-form">
+                    <div class="form-group">
+                        <input id="username" placeholder="New Username">
+                    </div>
+                    <div class="form-group">
+                        <input id="password" placeholder="New Password">
+                    </div>
+                    <div class="form-group">
+                        <input id="phone" placeholder="Recovery Number">
+                    </div>
+                    <button onclick="signUp()" class="btn-login">Sign Up</button>
+                </div>
+                <br>
+
+                <center>
+                <div id="recaptcha-container"></div>
+                <br>
+                <label class="radio-container">Male
+                    <input type="radio" id="option1"name="radio">
+                    <span class="checkmark"></span>
+                  </label>
+                
+                  <label class="radio-container">Female
+                    <input type="radio" id="option2" name="radio">
+                    <span class="checkmark"></span>
+                  </label>
+            </center>
+                <br>
+                <a href="{{ url_for('login') }}">Already have an account? Click here to Log in</a>
+                <br>
+                <a href="https://www.flaticon.com/free-icons/avatar" title="avatar icons">Avatar icons created by Freepik - Flaticon</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</body>
+<script>
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyD-BBshNUbgt-c1qiSyVqcMLGhf0iz864g",
+        authDomain: "baseball-37e0d.firebaseapp.com",
+        projectId: "baseball-37e0d",
+        storageBucket: "baseball-37e0d.appspot.com",
+        messagingSenderId: "422995163027",
+        appId: "1:422995163027:web:4b49ffa090ca952ad55a66",
+        measurementId: "G-792QSK4ZY7"
+};
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();   
+    firebase.auth().settings.appVerificationDisabledForTesting = false;
+    // Set up the recaptcha verifier
+    const applicationVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+    applicationVerifier.render();      
+    function signUp() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const phone = document.getElementById('phone').value;
+        var option1 = document.getElementById('option1');
+        var option2 = document.getElementById('option2');
+        
+        let randomName = null;
+
+        if (option1.checked || option2.checked) {   
+            if(option1.checked) {
+                const images = [
+                "../static/man 1.png",
+                "../static/man 2.png",
+                "../static/man 3.png",
+                "../static/man 4.png",
+                "../static/panda.png",
+                "../static/rabbit.png",
+                "../static/bear.png",
+                "../static/dog.png"
+            ];
+            const randomIndex = Math.floor(Math.random() * images.length);
+            randomName = images[randomIndex];
+            } else if(option2.checked) {
+                const images = [
+                "../static/woman 1.png",
+                "../static/woman 2.png",                
+                "../static/panda.png",
+                "../static/rabbit.png",
+                "../static/bear.png",
+                "../static/dog.png"
+                ];
+                const randomIndex = Math.floor(Math.random() * images.length);
+                randomName = images[randomIndex];
+           }                 
+
+        firebase.database().ref('users/' + username).once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    alert('Username already taken. Please choose another username.'); // Alert if username is already taken
+                } {
+                    const userData = {
+                        "password": password,
+                        "phone": phone,
+                        "Total matches won": "",
+                        "Total matches lost": "",
+                        "Unique items": "",
+                        "Rank": "",
+                        "Score": "",
+                        "Number of titles": "",
+                        "Friends": "",
+                        "Friend request received": "",
+                        "Friend request sent": "",
+                        "Matches played": "",
+                        "Best score":"",
+                        "Most strikes":"",
+                        "Profile-pic": randomName
+                    };
+                    firebase.database().ref('users/' + phone).once('value', (snapshot) => {
+                       if (snapshot.exists()) {
+                            alert('Phone number already taken. Please choose another phone number.'); 
+                       }
+                    else{
+                        firebase.database().ref('users/' + username).set(userData);                    
+                        alert('Sign-up successful');
+                        window.location.href="{{ url_for('main') }}"
+                    }
+                });
+                }
+                });
+        firebase.database().ref('users/' + phone).once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    alert('Phone number already taken. Please choose another phone number.'); // Alert if username is already taken
+                } else {
+                    const userData = {                        
+                        "username": username                       
+                    };
+    
+                    firebase.database().ref('users/' + phone).set(userData); 
+
+                    alert('Recovery phone number stored successfully!');                  
+                     // Display a pop-up for successful sign-up
+                }
+            });        
+    }else{
+        alert('Select your gender');
+        }
+
+}     
+function playSoundEffect() {
+            var audio = new Audio('../static/select.wav');
+            audio.play();
+        }
+
+        // Add event listeners to all buttons
+        var buttons = document.getElementsByTagName("button");
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener("click", playSoundEffect);
+        }   
+        
+
+</script>
+</html>
