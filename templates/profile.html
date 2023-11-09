@@ -297,7 +297,7 @@ function denyFriendRequest()
 
         if (friendUsername !== null) {
             // Update the value in the Firebase Realtime Database
-            database.ref('users/' + friendUsername).child('Friend request received').set(username)  
+            database.ref('users/' + friendUsername).child('Friend request received').update(username)  
                 .then(() => {
                     if(snapshot.exists()){
                     alert('Friend request sent successfully!');
