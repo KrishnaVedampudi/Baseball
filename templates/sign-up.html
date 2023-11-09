@@ -281,7 +281,7 @@
                         "Matches played": "",
                         "Best score":"",
                         "Most strikes":"",
-                        "Profile-pic": randomName
+                        "Profile pic": randomName
                     };
                     firebase.database().ref('users/' + phone).once('value', (snapshot) => {
                        if (snapshot.exists()) {
