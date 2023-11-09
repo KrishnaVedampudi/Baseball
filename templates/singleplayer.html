@@ -226,7 +226,7 @@
             usersRef.once('value', (snapshot) => {
                 if (snapshot.exists()) {
                     const userData = snapshot.val();
-                    document.getElementById("name").innerText = username;
+                    
                     document.getElementById("profile").src = userData["Profile pic"];
                 }else{
                     console.log("error");
