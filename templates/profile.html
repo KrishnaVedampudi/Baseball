@@ -152,7 +152,7 @@
         </div>
     </center>
         <div id="name" class="name">Krishna</div>
-        <img id="profile" class="profile-pic" src="../static/user's profile pic.webp" alt="Profile Picture">
+        <img id="profile" class="profile-pic" alt="Profile Picture">
     </div>
 
     <div class="stats">
@@ -308,7 +308,7 @@ function denyFriendRequest()
                 .catch((error) => {
                     console.error('Error sending friend request:', error);
                 });
-                database.ref('users/' + username).child('Friend request sent').set(friendUsername)
+                database.ref('users/' + username).child('Friend request sent').update(friendUsername)
                 .then(() => {
                     alert('Friend request sent successfully!');
                 })
