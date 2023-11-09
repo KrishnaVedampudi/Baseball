@@ -1,16 +1,23 @@
+times_sent = 0
 import random
 from flask import Flask, render_template, request
 from paho.mqtt import client as mqtt_client
+import time
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    global detection
+    client_run = connect()    
+    client_run.loop_start()  
+    time.sleep(1)
+    status = int(detection)
+    return render_template('index.html',)
 
 broker = "broker.emqx.io"
 port = 1883
-topic = "topicName/pir"
+topic = "1V1"
 
 client_id = 'test'
 username = 'emqx'
@@ -27,31 +34,26 @@ def connect():
     client.subscribe(topic)
     return client
 
-def connect():
-    client = mqtt_client.Client(client_id)
-    client.username_pw_set(username, password)
-    client.on_connect = on_connect
-    client.connect(broker, port)
-    client.on_message = on_message
-    client.subscribe(topic)
-    return client
 
 def on_connect(client: mqtt_client, userdata, flags, rc):
-    print("Connected with result code"+str(rc))
+    global times_sent
+    print("Connected with result code " + str(rc))
+    client.subscribe(topic)
+    if times_sent==0:
+       client.publish(topic, "Player joined")    
+    times_sent = 1
+    print("BOOH!")
 
-def on_message(client, userdata, msg):
-    global detection
-    detection = int(msg.payload.decode())
-    print("Detection:", detection)      
 
-@app.route('/')
-def check_detection():
-    global detection
-    client_run = connect()    
-    client_run.loop_start()  
-    time.sleep(1)
-    status = int(detection)
-    return render_template('index.html', status)
+# Define the lobby topic
+
+# Track the number of players in the lobby
+players_in_lobby = 0
+
+
+def on_message(client, userdata, message):       
+    client.publish("game_start")
+
 @app.route('/login')
 def login():
     return render_template('login.html')
@@ -76,7 +78,6 @@ def arena():
 @app.route('/singleplayer')
 def singleplayer():
     return render_template('singleplayer.html')  
-
 
 if __name__ == '__main__':
     app.run(debug=True)
