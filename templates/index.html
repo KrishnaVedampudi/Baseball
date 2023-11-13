@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +7,9 @@
     <link rel="icon" href="../static/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
         /* Custom CSS */
@@ -107,44 +109,6 @@
             var audio = new Audio('../static/select.wav');
             audio.play();
         }
-        let strikes=3;
-        function simulateStrike() {
-            // Display the strike message
-            const strikeMessage = document.getElementById('strikeMessage');
-            strikeMessage.innerText = 'You lost a strike!';
-            strikeMessage.style.display = 'block';
-
-            // After 3 seconds, hide the strike message
-            setTimeout(function() {
-                strikeMessage.style.display = 'none';
-            }, 3000);
-        }
-
-        // Add event listeners to all buttons
-        
-         // Number of strikes allowed
-
-function simulateStrike() {
-    const strikeMessage = document.getElementById('strikeMessage');
-    const strikeText = document.getElementById('strikeText');
-    const strikesLeft = document.getElementById('strikesLeft');
-
-    if (strikes > 0) {
-        strikeText.innerText = 'You lost a strike!';
-        strikesLeft.innerText = 'Strikes left: ' + (--strikes);
-        strikeMessage.style.display = 'flex';
-
-        setTimeout(function() {
-            strikeMessage.style.display = 'none';
-        }, 3000);
-    } else {
-        strikesLeft.innerText = 'No strikes left!';
-    }
-}
-window.onload = function() {
-            const strikeMessage = document.getElementById('strikeMessage');
-            strikeMessage.style.display = 'none';
-        };
 </script>
 <body>
     <div class="header">
@@ -176,7 +140,9 @@ window.onload = function() {
     </div>
 
  
-    
+    <audio id="audioPlayer" autoplay preload="auto" volume="0.75">
+        <source src="../static/bgm.mp3" type="audio/mp3">
+    </audio>
 
     <!-- Rules Modal -->
     <div class="modal fade" id="rulesModal" tabindex="-1" role="dialog" aria-labelledby="rulesModalLabel" aria-hidden="true">
@@ -216,11 +182,13 @@ window.onload = function() {
         </div>
     </div>
     
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 <script>
+    function playSoundEffect() {
+            var audio = new Audio('../static/select.wav');
+            audio.play();
+        }
     document.body.addEventListener('click', function (event) {        
           playSoundEffect();
         
