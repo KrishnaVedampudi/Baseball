@@ -4,11 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Game Title</title>
+    <title>Baseball battle</title>
+    <link rel="icon" href="../static/logo.png" type="image/x-icon">
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts - Orbitron -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
          body {
             font-family: 'Orbitron', sans-serif;
@@ -157,7 +161,7 @@
         <div id="battingStatus"></div>
     </div>
     <div class="center-container">
-        <img src="..static/user's profile pic.webp" alt="Human Icon" class="icon">
+        <img src="../static/bear.png" alt="Human Icon" id="profile" class="icon">
         <div style="width: 20px;"></div> <!-- Space between icons -->
         <img src="../static/bot.png" alt="Computer Icon" class="icon">
     </div>
@@ -199,6 +203,10 @@
             </div>
           </div>
     </div>
+    <audio id="audioPlayer" autoplay preload="auto" volume="0.75">
+        <source src="../static/bgm.mp3" type="audio/mp3">
+    </audio>
+    
 
     <script>
         const firebaseConfig = {
@@ -211,6 +219,9 @@
         measurementId: "G-792QSK4ZY7"
          
         }
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();   
+
          document.addEventListener("DOMContentLoaded", function() {
         
         if (localStorage.getItem('username') !== null) {
@@ -224,7 +235,7 @@
             usersRef.once('value', (snapshot) => {
                 if (snapshot.exists()) {
                     const userData = snapshot.val();
-                    document.getElementById("name").innerText = username;
+                    
                     document.getElementById("profile").src = userData["Profile pic"];
                 }else{
                     console.log("error");
@@ -345,6 +356,17 @@
                 status="Bowling";
             }
             if (status == "Batting") {
+                if(playerStrikes<3 && generatorStrikes==3 && playerScore>generatorScore)
+                    {
+                        alert("You Won!");
+                        status = null;
+                        playerStrikes=0;
+                        playerScore=0;
+                        generatorStrikes=0;
+                        generatorScore=0;
+                        alert("Would you like a rematch?");
+                        playGame();
+                    }
                 console.log("game loop");
                 let playerPick = selectedNumber;
                 let generatorPick = generateRandomNumber();
@@ -359,7 +381,7 @@
                      else if(playerStrikes == 3 && generatorStrikes == 3) 
                      {
                         if (playerScore - generatorScore > 0) {
-                            alert("Player Won!");
+                            alert("You Won!");
                             status = null;
                             playerStrikes=0;
                             playerScore=0;
@@ -386,6 +408,17 @@
                 }
             }
             if (status == "Bowling") {
+                if(generatorStrikes<3 && playerStrikes==3 && generatorScore>playerScore)
+                    {
+                        alert("Bot Won!");
+                        status = null;
+                        playerStrikes=0;
+                        playerScore=0;
+                        generatorStrikes=0;
+                        generatorScore=0;
+                        alert("Would you like a rematch?");
+                        playGame();
+                    }
                 let playerPick = selectedNumber;
                 let generatorPick = generateRandomNumber();
                 if (playerPick == generatorPick) {
@@ -396,7 +429,7 @@
                         status = "Batting";
                     } else if (generatorStrikes == 3 && playerStrikes==3) {
                         if (playerScore - generatorScore > 0) {
-                            alert("Player Won!");
+                            alert("You Won!");
                             status = null;
                             playerStrikes=0;
                             playerScore=0;
@@ -428,20 +461,21 @@
             generatorScoreDiv.innerText = "Score: " + generatorScore;
             battingStatusDiv.innerText = "Status: " + status;
         }
-        function playSoundEffect() {
-            var audio = new Audio('../static/select.wav');
-            audio.play();
-        }
-
-        // Add event listeners to all buttons
-        var buttons = document.getElementsByTagName("button");
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].addEventListener("click", playSoundEffect);
-        }
-
         // Example usage of the functions
         storeNumber(); // Example selected number
         playGame();
     </script>
+    <script>
+        function playSoundEffect() {
+                var audio = new Audio('../static/select.wav');
+                audio.play();
+            }
+        document.body.addEventListener('click', function (event) {        
+              playSoundEffect();
+            
+          });
+    </script>
+    
+    
     </body>
     </html>

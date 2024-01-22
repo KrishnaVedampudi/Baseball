@@ -3,22 +3,31 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="..static/logo.png" type="image/x-icon">
+    <link rel="icon" href="../static/logo.png" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BaseBall Battle</title>
-    <!-- Bootstrap CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts - Orbitron -->
+   
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Google Fonts - Orbitron -->
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        function playSoundEffect() {
+                var audio = new Audio('../static/select.wav');
+                audio.play();
+            }
+        document.body.addEventListener('click', function (event) {        
+              playSoundEffect();
+            
+          });
+    </script>
     <style>
         body {
             font-family: 'Orbitron', sans-serif;
-            background:url('background.jpg');
+            background:url('../static/background.jpg');
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
@@ -79,6 +88,7 @@
             padding: 10px;
             text-transform: uppercase;
         }
+        
         .btn-danger
         {
             width:50px !important;
@@ -96,6 +106,7 @@
         .btn-success {
             background-color: #5cb85c;
             border-color: #5cb85c;
+            width:95%;
         }
 
         .btn-info {
@@ -103,11 +114,17 @@
             border-color: #5bc0de;
         }
 
+        #deny, #accept, #close
+        {
+            width:25% !important;
+        }        
+
         .btn-primary {
             background-color: #0275d8;
             border-color: #0275d8;
-            width:95%;
+            width:95%;        
         }
+        
         .exit-btn {
             position: absolute;
             top: 10px;
@@ -152,7 +169,7 @@
         </div>
     </center>
         <div id="name" class="name">Krishna</div>
-        <img id="profile" class="profile-pic" src="../static/user's profile pic.webp" alt="Profile Picture">
+        <img id="profile" class="profile-pic" alt="Profile Picture">
     </div>
 
     <div class="stats">
@@ -189,10 +206,12 @@
             <div id="stat-value-UT">1</div>
         </div>
 
-    </div>
+    </div><audio id="audioPlayer" autoplay preload="auto" volume="0.75">
+        <source src="../static/bgm.mp3" type="audio/mp3">
+    </audio>
 
     <div class="buttons">
-        <button type="button" onclick="showFriendRequestModal()" class="btn btn-success">Friend request received</button>        
+        <button type="button" data-toggle="modal" data-target="#friendRequestModal" onclick="retrieveFriendRequests()" class="btn btn-success">Friend request received</button>        
         <button type="button" onclick="sendFriendRequest()" class="btn btn-primary">Send a New Friend Request</button>
         <button type="button" class="btn btn-primary">Change Password</button>
         <button type="button" class="btn btn-primary">Change recovery phone number</button>
@@ -203,22 +222,36 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="friendRequestModalLabel">Friend Request</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <span>
+                    <h5 class="modal-title" id="friendRequestModalLabel">Friend Request</h5>
+                </span>
+                <span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </span>              
             </div>
             <div class="modal-body">
-              <div id="usernames" style="max-height: 200px; overflow-y: auto;">
+              <div id="usernames">
                 <!-- Usernames will be added here -->
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" onclick="acceptFriendRequest()">Accept</button>
-              <button type="button" class="btn btn-danger" onclick="denyFriendRequest()">Deny</button>
+                <center>
+                    <span>
+                        <button type="button" id="close" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </span>
+                    <span>              
+                        <button type="button" id="accept" class="btn btn-primary" onclick="acceptFriendRequest()">Accept</button>
+                    </span>
+                    <span>
+                        <button type="button" id="deny" class="btn btn-danger" onclick="denyFriendRequest()">Deny</button>
+                    </span>
+                 </center>
             </div>
           </div>
         </div>
-      </div>
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -231,6 +264,7 @@
         messagingSenderId: "422995163027",
         appId: "1:422995163027:web:4b49ffa090ca952ad55a66",
         measurementId: "G-792QSK4ZY7"
+
 };
 function exit()
 {
@@ -295,9 +329,9 @@ function denyFriendRequest()
         const username = localStorage.getItem('username');
         const friendUsername = prompt("Enter the username to send a friend request:");
 
-        if (friendUsername !== null) {
+        if (friendUsername != null) {
             // Update the value in the Firebase Realtime Database
-            database.ref('users/' + friendUsername).child('Friend request received').set(username)  
+            database.ref('users/' + friendUsername).child('Friend request received').child(username).set(true)  
                 .then(() => {
                     if(snapshot.exists()){
                     alert('Friend request sent successfully!');
@@ -308,7 +342,7 @@ function denyFriendRequest()
                 .catch((error) => {
                     console.error('Error sending friend request:', error);
                 });
-                database.ref('users/' + username).child('Friend request sent').set(friendUsername)
+                database.ref('users/' + username).child('Friend request sent').child(friendUsername).set(true)
                 .then(() => {
                     alert('Friend request sent successfully!');
                 })
@@ -319,7 +353,7 @@ function denyFriendRequest()
         }
     
     }
-    function showFriendRequestModal() {
+    function retrieveFriendRequests() {        
         const username = localStorage.getItem('username');
         const usernamesDiv = document.getElementById('usernames');
         usernamesDiv.innerHTML = ''; // Clear the previous content
@@ -327,22 +361,16 @@ function denyFriendRequest()
         // Retrieve the list of usernames from the Firebase Realtime Database
         const database = firebase.database();
         const usersRef = database.ref('users/' + username + '/Friend request received');
-        usersRef.once('value', (snapshot) => {
+        usersRef.once('value', function(snapshot) {
             if (snapshot.exists()) {
-                const usernames = snapshot.val();
-                if (usernames) {
-                    Object.keys(usernames).forEach(key => {
-                        const div = document.createElement('div');
-                        div.textContent = usernames[key];
-                        usernamesDiv.appendChild(div);
-                    });
-                }
+                const data = snapshot.val();
+                const usernames = Object.keys(data);
+                document.getElementById('usernames').innerText = usernames;
             }
         });
 
         // Show the Bootstrap modal
-        var myModal = new bootstrap.Modal(document.getElementById('friendRequestModal'));
-        myModal.show();
+        
     }
     </script>
 </body>

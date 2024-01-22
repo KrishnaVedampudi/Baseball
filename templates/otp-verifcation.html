@@ -43,10 +43,21 @@
          
           <button class = "btn btn-success"  type = "button" onclick = "codeVerify();">Check the OTP</button>
   
-        </form>     
+        </form>     <audio id="audioPlayer" autoplay preload="auto" volume="0.75">
+          <source src="../static/bgm.mp3" type="audio/mp3">
+      </audio>
         
         </center>
-   
+        <script>
+          function playSoundEffect() {
+                  var audio = new Audio('../static/select.wav');
+                  audio.play();
+              }
+          document.body.addEventListener('click', function (event) {        
+                playSoundEffect();
+              
+            });
+      </script>
    <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
      .form-control{
@@ -54,7 +65,7 @@
 
 }
 body{
-    background:url("background.jpg");
+    background:url("../static/background.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

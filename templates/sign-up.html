@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="../static/logo.png" type="image/x-icon">
+    <tile>Sign up for Baseball battle</tile>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -203,6 +204,19 @@
             </div>
         </div>
     </div>
+    <audio id="audioPlayer" autoplay preload="auto" volume="0.75">
+        <source src="../static/bgm.mp3" type="audio/mp3">
+    </audio>
+    <script>
+        function playSoundEffect() {
+                var audio = new Audio('../static/select.wav');
+                audio.play();
+            }
+        document.body.addEventListener('click', function (event) {        
+              playSoundEffect();
+            
+          });
+    </script>
     
     <!-- Include Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -281,7 +295,7 @@
                         "Matches played": "",
                         "Best score":"",
                         "Most strikes":"",
-                        "Profile-pic": randomName
+                        "Profile pic": randomName
                     };
                     firebase.database().ref('users/' + phone).once('value', (snapshot) => {
                        if (snapshot.exists()) {

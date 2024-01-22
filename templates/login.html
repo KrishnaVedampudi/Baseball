@@ -3,17 +3,26 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="../static/ogo.png" type="image/x-icon">
+    <link rel="icon" href="../static/logo.png" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    
+    <script>
+        function playSoundEffect() {
+                var audio = new Audio('../static/select.wav');
+                audio.play();
+            }
+        document.body.addEventListener('click', function (event) {        
+              playSoundEffect();
+            
+          });
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
         body {
@@ -103,7 +112,9 @@
 <body>
          
     <div class="container">
-
+        <audio id="audioPlayer" autoplay preload="auto" volume="0.75">
+            <source src="../static/bgm.mp3" type="audio/mp3">
+        </audio>
         <div class="row">
             <div class="center-div">
                 <div class="img-container">

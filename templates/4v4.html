@@ -4,15 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Game Title</title>
+    <title>Baseball Battle</title>
+    <link rel="icon" href="../static/logo.png" type="image/x-icon">
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts - Orbitron -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        function playSoundEffect() {
+                var audio = new Audio('../static/select.wav');
+                audio.play();
+            }
+        document.body.addEventListener('click', function (event) {        
+              playSoundEffect();
+            
+          });
+    </script>
     <style>
          body {
             font-family: 'Orbitron', sans-serif;
-            background-color: #000;
+            background-color: black;
             color: #fff;
             display: flex;
             flex-direction: column;
@@ -30,7 +41,7 @@
     .item-container {
         display: flex;
         flex-direction: column;
-        width: 35%;
+        width: 45%;
         justify-content: space-between;
     }
 
@@ -58,17 +69,26 @@
 
         .team-stats-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
+         
             margin: 20px;
             height:fit-content;
             padding:10px;
             background-color: red;
             border-radius:15px;
+            width:25%;
         }
 
         .team-stats {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between !important;
+            width:95%;
+            
+        }
+        .team{
+            margin-left:5%;
+            margin-right:5%;
+            width:100%;
         }
 
     .main-container {
@@ -119,116 +139,106 @@
         /* ... */
     </style>
 </head>
-
+<script>
+    function playSoundEffect() {
+            var audio = new Audio('../static/select.wav');
+            audio.play();
+        }
+    document.body.addEventListener('click', function (event) {        
+          playSoundEffect();
+        
+      });
+</script>
 <body>
     <h1>Baseball Battle</h1>
-    <h2>Welcome to the arena where you battle it out with your opponent(s)</h2>
-
+    <h2>Welcome to the arena where you battle it out with your opponents</h2>
     
-      <div class="team-stats-container">
-      <div class="team-stats">
-        <div>
-            Team A Score: 50
-            <br>
-            Strikes Lost: 2
-            <br>
-            Players: 5
-            <br>
-            Team Name: Team A
-        </div>
-        <div>
-            Team B Score: 40
-            <br>
-            Strikes Lost: 1
-            <br>
-            Players: 4
-            <br>
-            Team Name: Team B
-        </div>
-    </div>
-  </div>    
+    <div class="team-stats-container">
+        <div class="team-stats">
+          <div class="team">
+              Team A Score: 50
+              <br>
+              Strikes Lost: 
+              <br>
+              Players: 4              
+          </div>
+          
+          <div class="team">
+              Team B Score: 40
+              <br>
+              Strikes Lost: 1
+              <br>
+              Players: 4
+          </div>
+      </div>
+    </div>    
+      
     <br>
+    <audio id="audioPlayer" autoplay preload="auto" volume="0.75">
+        <source src="../static/bgm.mp3" type="audio/mp3">
+    </audio>
     <div class="main-container">
-        <div class="item-container left">
-        <span class="arrow-up" id="arrowUp" aria-hidden="true">▲</span>
-        <div class="item" onclick="selectItem(1)"><div class="player-item">
-              <span>Player 1</span>
-              <span>Score: 100</span>
-              <span>Strikes Lost: 2</span>
-              <span>⭐</span>
+        <div class="item-container left">        
+        <div class="item" onclick="selectItem(1)">
+        <div class="player-item">
+              <span id="your_name">Player 1</span>
+              <span id="your_score">Score: 100</span>
+              <span id="your_strikes">Strikes Lost: 2</span>              
+        </div>
+    </div> 
+        <div class="item" onclick="selectItem(2)">
+            <div class="player-item">
+              <span id="team_name1">Player 2</span>
+              <span id="team_score1">Score: 90</span>
+              <span id="team_strikes1">Strikes Lost: 1</span>
+          </div>
+      </div>
+      <div class="item" onclick="selectItem(2)">
+        <div class="player-item">
+          <span id="team_name2">Player 3</span>
+          <span id="team_score2">Score: 90</span>
+          <span id="team_strikes2">Strikes Lost: 1</span>
+      </div>
+  </div>
+  <div class="item" onclick="selectItem(2)">
+    <div class="player-item">
+      <span id="team_name3">Player 4</span>
+      <span id="team_score3">Score: 90</span>
+      <span id="team_strikes3">Strikes Lost: 1</span>
+  </div>
+</div>
+               
+        </div>
+        <div class="item-container right">          
+          <div class="item" onclick="selectItem(1)"><div class="player-item">
+                <span id="opponent_name">Player 1</span>
+                <span id="opponent_score">Score: 100</span>
+                <span id="opponent_strikes">Strikes Lost: 2</span>                
+            </div>
+          </div>
+          
+          <div class="item" onclick="selectItem(2)">
+            <div class="player-item">
+            <span id="opponent_name_1">Player 2</span>
+            <span id="opponent_score_1">Score: 100</span>
+            <span id="opponent_strikes_1">Strikes Lost: 2</span>
           </div>
         </div>
-        <div class="item" onclick="selectItem(2)">
-              <div class="player-item">
-                <span>Player 2</span>
-                <span>Score: 90</span>
-                <span>Strikes Lost: 1</span>
-            </div>
-        </div>
-        <div class="item" onclick="selectItem(3)">
-          <div class="player-item">
-            <span>Player 3</span>
-            <span>Score: 85</span>
-            <span>Strikes Lost: 0</span>              
-        </div>
-        </div>
-        <div class="item" onclick="selectItem(4)">
-          <div class="player-item">
-            <span>Player 4</span>
-            <span>Score: 80</span>
-            <span>Strikes Lost: 3</span>
-        </div>
-        </div>
-        <div class="item" onclick="selectItem(5)">
-          <div class="player-item">
-            <span>Player 5</span>
-            <span>Score: 75</span>
-            <span>Strikes Lost: 1</span>
-        </div>
-        </div>
-        </div>
-
-        <div class="item-container right">
-          <span class="arrow-up" id="arrowUp" aria-hidden="true">▲</span>
-          <div class="item" onclick="selectItem(1)"><div class="player-item">
-                <span>Player 1</span>
-                <span>Score: 100</span>
-                <span>Strikes Lost: 2</span>
-                <span>⭐</span>
+          <div class="item" onclick="selectItem(1)">
+            <div class="player-item">
+                <span id="opponent_name_2">Player 3</span>
+                <span id="opponent_score_2">Score: 100</span>
+                <span id="opponent_strikes_2">Strikes Lost: 2</span>                
             </div>
           </div>
           <div class="item" onclick="selectItem(2)">
-                <div class="player-item">
-                  <span>Player 2</span>
-                  <span>Score: 90</span>
-                  <span>Strikes Lost: 1</span>
-              </div>
-          </div>
-          <div class="item" onclick="selectItem(3)">
             <div class="player-item">
-              <span>Player 3</span>
-              <span>Score: 85</span>
-              <span>Strikes Lost: 0</span>              
-          </div>
-          </div>
-          <div class="item" onclick="selectItem(4)">
-            <div class="player-item">
-              <span>Player 4</span>
-              <span>Score: 80</span>
-              <span>Strikes Lost: 3</span>
-          </div>
-          </div>
-          <div class="item" onclick="selectItem(5)">
-            <div class="player-item">
-              <span>Player 5</span>
-              <span>Score: 75</span>
-              <span>Strikes Lost: 1</span>
-          </div>
-            <span class="arrow-down" id="arrowDown" aria-hidden="true">▼</span>
-        </div>
-        
+            <span id="opponent_name_3">Player 4</span>
+            <span id="opponent_score_3">Score: 100</span>
+            <span id="opponent_strikes_3">Strikes Lost: 2</span>
+          </div>          
     </div>
-  </div>
+
   </div>   
     <div class="number-container">
         <div class="number">1</div>

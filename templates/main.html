@@ -6,11 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Baseball Battle</title>
     <link rel="icon" href="../static/logo.png" type="image/x-icon">
-    <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">  
+<!-- Font Awesome CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
     <script>
         function toComputer()
         {
@@ -34,8 +44,7 @@
             color: #fff;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: center;            
             flex-direction: column;
         }
         img{
@@ -63,6 +72,9 @@
             padding: 5px;
             background-color: white;
         }
+        .modal-dialog{
+            color:black;
+        }
 
         .navbar-icons {
             display: flex;
@@ -86,7 +98,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 50px;
+            margin-top: 10px;
             border-radius: 10px;
             padding: 20px;
         }
@@ -118,6 +130,8 @@
 </head>
 
 <body>
+    <br>
+    <br>
     <div class="modal fade" id="rulesModal" tabindex="-1" role="dialog" aria-labelledby="rulesModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -129,12 +143,13 @@
                 </div>
                 <div class="modal-body col-sm-12 col-lg-12 col-xs-12 col-md-12">
                     <!-- Add your game rules here -->
-                    <p class="special">Rules: How to decide who gets to bat or bowl? a player picks odd or even and says it out loud after which both of them will pick a number and say it out loud and if the sum of the two numbers said by the players is odd or even then the player that picks the number will decide whether he wants to bat or bowl. What is the game? Both players will get their role of batting or bowling and they will pick one number each and say it out loud at the same time, if the number said by both of them is the same, then that number will be doubled and added to the score of the batter and if the number picked by the bowler is 1 more than or less than the number picked by the batter the batter loses a strike and if it is unrelated then the batter gets the number he picked added to his score and after the batter loses all his strikes the bowler will now be the batter, this batter will have to beat the score set by the batter in order to win. How many players? If there is more than 1 player on each side, the game will be different, there will be a captain who will selected randomly and he will play the game that decides the batting team or bowling team and after that, he will choose what he wants to do and the other players will give him suggestions. He will pick the player that goes to bat first and bowl first and he can also swap the players(which means he can choose who can bowl or bat at that time among his team) if he wants to in the middle of the match and he can also relinquish his position to the others. There will also be 1v4, 1v5, and 1v6 mismatches in which a single player with 12 15, or 18 strikes (depending on the number of players in the opposing team) faces off against a group of players with 3 strikes each and if he was victorious he will gain a lot more points than a normal game. He can also play against a random number generator against a computer if he wants to. 
+                    <p class="special">Rules: How to decide who gets to bat or bowl? A player picks odd or even and says it out loud after which both of them will pick a number and say it out loud and if the sum of the two numbers said by the players is odd or even then the player that picks the number will decide whether he wants to bat or bowl. What is the game? Both players will get their role of batting or bowling. They can pick one number each and reveal it simultaneously. If the number told by both of them is the same then that number will be doubled and added to the score of the batter and if the number picked by the bowler is one more than or less than the number picked by the batter loses a strike and if it is unrelated then the batter gets the number he picked added to his score. After the batter loses all his strikes, the bowler will now be the batter, this batter will have to beat the score set by the batter to win. How many players? If there is more than 1 player on each side, the game will be different, and there will be a captain who will be selected randomly. He will play the game that decides which team will bat first or bowl first after which he will choose what he wants to do and the other players will give him suggestions. He can pick the player that goes to bat or bowl or swap the players(which means he can choose who can bowl or bat at that time among his team) if he wants to in the middle of the match. He can also relinquish his position to the others. There will also be 1v4, 1v5, and 1v6 mismatches in which a single player with 12 15, or 18 strikes (depending on the number of players in the opposing team) faces off against a group of players with three strikes each. If he wins, he will gain more points than a casual game. He can also play against a random number generator against a computer if he wants to. 
                     </p>
                 </div>
             </div>
         </div>
     </div>
+    
     <div class="navbar">
         <div class="logo">
             <img src="../static/logo.png" alt="logo" />
@@ -143,13 +158,13 @@
     </div>
 
     <div class="navbar-icons">
-        <span class="glyphicon glyphicon-envelope" style="font-size: 24px; margin-right: 20px;"></span>
-        <span class="glyphicon glyphicon-stats" style="font-size: 24px;"></span>
+        <span class="fas fa-envelope" style="font-size: 24px; margin-right: 20px;"></span>
+        <span class="fas fa-chart-bar" style="font-size: 24px;"></span>
     </div>
     <br>
-    <br>
+    
     <div class="profile">
-        <img id="profile" src="../static/user's profile pic.webp" alt="User Profile">
+        <img id="profile" src="../static/bear.png" alt="User Profile">
         <div id="name">Krishna</div>
     </div>
 
@@ -157,16 +172,71 @@
         <button type="button" onclick="toProfile();" class="btn btn-primary">Profile</button>        
         <button type="button" class="btn btn-primary">Events</button>        
         <button type="button" onclick="toComputer();" class="btn btn-primary">VS Computer</button>
-        <button type="button" onclick="toLobby()" class="btn btn-primary">Multiplayer</button>        
+        <button type="button" data-toggle="modal" data-target="#modeSelectionModal" class="btn btn-primary">Multiplayer</button>        
         <button type="button" class="btn btn-primary">Guild</button>
         <button type="button" data-toggle="modal" data-target="#rulesModal" class="btn btn-warning">How to Play</button>
     </div>
 
+    <audio id="audioPlayer" autoplay preload="auto" volume="0.75">
+        <source src="../static/bgm.mp3" type="audio/mp3">
+    </audio>
     <div class="logout-btn">
         <button type="button" class="btn btn-danger">
-            <span class="glyphicon glyphicon-log-out"></span>
+            <span class="fas fa-sign-out-alt"></span>
         </button>
     </div>
+
+    <div class="modal fade" id="modeSelectionModal" tabindex="-1" aria-labelledby="modeSelectionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    
+                    <h4 class="modal-title" id="modeSelectionModalLabel">Select Mode</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Select the mode you prefer:</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="modeRadio" id="1v1">
+                        <label class="form-check-label" for="lightModeRadio">         
+                            1v1                   
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="modeRadio" id="2v2">
+                        <label class="form-check-label" for="darkModeRadio">
+                            2V2
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="modeRadio" id="3v3">
+                        <label class="form-check-label" for="darkModeRadio">
+                            3V3
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="modeRadio" id="4v4">
+                        <label class="form-check-label" for="darkModeRadio">
+                            4V4                            
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="modeRadio" id="custom">
+                        <label class="form-check-label" for="darkModeRadio">
+                            CUSTOM+
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="toLobby()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 
     <!-- Include Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -180,28 +250,52 @@
         appId: "1:422995163027:web:4b49ffa090ca952ad55a66",
         measurementId: "G-792QSK4ZY7"
 };
-function toProfile()
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database(); 
+    
+    function toProfile()
 {
     window.location.href="{{ url_for('profile') }}";
 }
-function toLobby()
-{
-    localStorage.setItem("PVPmode", "1v1");
-    window.location.href="{{ url_for('profile') }}";
+function toLobby() {
+    const radioButtons = ["1v1", "2v2", "3v3", "4v4", "custom"];
+    let selectedMode;
+    username = localStorage.getItem('username');
+    // Find the selected radio button
+    for (const mode of radioButtons) {
+        const radioButton = document.getElementById(mode);
+        if (radioButton && radioButton.checked) {
+            selectedMode = mode;
+            break;
+        }
+    }
+
+    // Set localStorage and redirect to the lobby
+    if (selectedMode) {
+        localStorage.setItem("PVPmode", selectedMode);
+        
+        const lobbyRef = database.ref('lobby/');
+        lobbyRef.child(selectedMode).set({ [username]: "connected" })
+  .then(() => {
+    console.log('Data successfully written to Firebase.');
+    window.location.href = "{{ url_for('lobby') }}";
+  })
+  .catch((error) => {
+    console.error('Error writing to Firebase:', error);
+  });
+    }
 }
+  
+
 
     // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();   
+ 
         // Check local storage on page load
     document.addEventListener("DOMContentLoaded", function() {
         // Check if username key exists in local storage
         if (localStorage.getItem('username') !== null) {
             // Get the value from the username key in local storage
             const username = localStorage.getItem('username');
-            document.getElementById("name").innerText=username
-
-            // Retrieve data from Firebase Realtime Database
             
             const usersRef = database.ref('users/' + username);
 
@@ -241,19 +335,21 @@ function toLobby()
                     console.log("User does not exist in the database.");
                 }
             });
-            // Handle the case where the phoneNumber key exists in local storage
-            // Your logic here
+            
         }
     });
+    
+    </script>
+</body>
+<script>
     function playSoundEffect() {
             var audio = new Audio('../static/select.wav');
             audio.play();
         }
-        document.body.addEventListener('click', function (event) {        
+    document.body.addEventListener('click', function (event) {        
           playSoundEffect();
         
       });
-    </script>
-</body>
+</script>
 
 </html>

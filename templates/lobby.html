@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../static/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <title>Baseball Lobby</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+         .exit-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px;            
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+         .lobby {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            height:55vh;            
+        }
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;          
+            margin: 10px;
+        }
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background:url('../static/background.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+            background-color: #000;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            align-content: center;
+            text-align: center;
+        }
+        .lobby
+        {
+            max-height:fit-content  !important;
+        }
+    </style>
+</head>
+<body>
+    <audio id="audioPlayer" autoplay preload="auto" volume="0.75">
+        <source src="../static/bgm.mp3" type="audio/mp3">
+    </audio>
+    <br>
+    <div class="exit-btn">
+        <button type="button" onclick="exit()"class="btn btn-danger">
+            <span class="glyphicon glyphicon-log-out"></span>
+        </button>
+    </div>
+    <div class="container">
+        Waiting for more players to join...
+        <div class="lobby" id="lobby">
+        <img width="200" height="200" id="profile">
+        
+    </div>
+        <div id="players-in-lobby">
+            Players in the lobby:
+    
+        </div>
+        <br>
+        <div id="chosen_mode">
+            Chosen mode:
+            
+        </div>
+    </div>
+   
+<script>
+let matchmakingDone = false;
+var mm;
+const username = localStorage.getItem('username');
+const selected_mode = localStorage.getItem('PVPmode');
+let lobbyRef = "lobby";
+let maker;
+document.getElementById('chosen_mode').innerText=selected_mode;
+const firebaseConfig = {
+  apiKey: "AIzaSyD-BBshNUbgt-c1qiSyVqcMLGhf0iz864g",
+  authDomain: "baseball-37e0d.firebaseapp.com",
+  projectId: "baseball-37e0d",
+  storageBucket: "baseball-37e0d.appspot.com",
+  messagingSenderId: "422995163027",
+  appId: "1:422995163027:web:4b49ffa090ca952ad55a66",
+  measurementId: "G-792QSK4ZY7"        
+  };
+  
+  const app = firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();   
+  document.addEventListener("DOMContentLoaded", function() {
+  if (localStorage.getItem('username') !== null) {      
+    const usersRef = database.ref('users/' + username);      
+    usersRef.once('value', (snapshot) => {
+      if (snapshot.exists()) {
+        const userData = snapshot.val();                    
+        document.getElementById("profile").src = userData["Profile pic"];
+      }
+    });
+  }
+
+  if (selected_mode == '1v1') {
+    lobbyRef = database.ref('lobby/1v1');
+    registerForMatchmaking(username);
+  }
+  if (selected_mode == '2v2') {
+    lobbyRef = database.ref('lobby/2v2'); 
+    registerForMatchmaking(username);   
+  }
+  if (selected_mode == '3v3') {
+    lobbyRef = database.ref('lobby/3v3');
+    registerForMatchmaking(username);    
+  }
+  if (selected_mode == '4v4') {
+    lobbyRef = database.ref('lobby/4v4');
+    registerForMatchmaking(username);    
+  }
+  if (selected_mode == 'custom') {
+    lobbyRef = database.ref('lobby/custom');
+    registerForMatchmaking(username);    
+  }
+});
+  
+function exit()
+{
+  window.location.href="/main";
+}
+
+
+let match_maker= false;
+function registerForMatchmaking(playerId) {
+  lobbyRef.once('value').then((snapshot) => {
+    const lobbyData = snapshot.val();    
+    if (!lobbyData.matchmaker) {
+      lobbyRef.child('matchmakingQueue').push(playerId);
+      lobbyRef.update({ matchmaker: playerId });      
+      match_maker=true;
+      maker = username;
+      tryMatchmaking(playerId);
+      console.log("I am the matchmaker");
+    } else {
+      // Otherwise, register the player for matchmaking
+      let mm = lobbyData.matchmaker
+      lobbyRef.child('matchmakingQueue').push(playerId);
+      localStorage.setItem(`${mm}`);
+      console.log(`Player ${playerId} registered for matchmaking.`);  
+      match_maker=false; 
+      maker = playerId;
+    }
+  });
+}
+
+
+
+// Function to try matchmaking
+function tryMatchmaking(maker) {  
+  if (matchmakingDone) {
+    console.log("Matchmaking already done. Skipping.");
+    return;
+  }
+  console.log("Attempting match making");
+  lobbyRef.child('matchmakingQueue').once('value').then((snapshot) => {
+    const matchmakingQueue = snapshot.val(); 
+    if(selected_mode=='1v1')
+    {
+    if (matchmakingQueue && Object.values(matchmakingQueue).length >= 2) {      
+      const player = Object.values(matchmakingQueue)[1];
+      console.log(`Match found! Players ${maker} and ${player} are matched.`);
+      const matchNotification = { opponent: player };
+      database.ref(`/games/${selected_mode}/${maker}/player2`).set(player);
+      database.ref(`/games/${selected_mode}/${maker}/player1`).set(username);
+      
+      lobbyRef.child('matchmakingQueue').child(player).remove();
+      lobbyRef.child('matchmakingQueue').child(username).remove();
+      lobbyRef.child(player).remove();
+      lobbyRef.child(username).remove();
+      lobbyRef.child('matchmaker').remove();
+      
+      localStorage.setItem("opponent", player);
+      localStorage.setItem("player2", player); 
+      localStorage.setItem("player1", username);   
+      localStorage.setItem("maker_id", username);
+
+      window.location.href="/one";      
+    } else {
+      console.log('Not enough players for matchmaking.');
+    }
+  }else{
+    lobbyRef.child('matchmakingQueue').once('value').then((snapshot) => {
+    const matchmakingQueue = snapshot.val();
+    const playersCount = matchmakingQueue ? Object.values(matchmakingQueue).length : 0;
+
+    // Adjust the number of players required based on the selected mode
+    let playersRequired;
+    if (selected_mode == '2v2') {
+      playersRequired = 4;
+    } else if (selected_mode == '3v3') {
+      playersRequired = 6;
+    } else if (selected_mode == '4v4') {
+      playersRequired = 8;
+    }
+    if (playersCount >= playersRequired) {
+      const players = Object.values(matchmakingQueue);  
+      const key_names = Object.keys(matchmakingQueue)
+      const team1 = players.slice(0, playersRequired / 2);
+      const team2 = players.slice(playersRequired / 2);
+      players.forEach(username => {
+        lobbyRef.child(username).remove();
+      });
+      key_names.forEach(key_names => {
+      lobbyRef.child('matchmakingQueue').child(key_names).remove();
+      });
+
+      
+      console.log(`Match found! Teams: ${team1} and ${team2}`);     
+      matchmakingDone = true; 
+      
+      // Update database and handle teams as needed
+      
+      database.ref(`/games/${selected_mode}/${maker}/Teams/Team1/${team1[0]}`).set({
+        score:0,
+        strikes:0
+      });
+      database.ref(`/games/${selected_mode}/${maker}/Teams/Team1/${team1[1]}`).set({
+        score:0,
+        strikes:0
+      });
+      database.ref(`/games/${selected_mode}/${maker}/Teams/Team2/${team2[0]}`).set({
+        score:0,
+        strikes:0
+      });
+      database.ref(`/games/${selected_mode}/${maker}/Teams/Team2/${team2[1]}`).set({
+        score:0,
+        strikes:0
+      });
+      if(selected_mode=='3v3' || selected_mode=='4v4')
+      {
+        database.ref(`/games/${selected_mode}/${maker}/Teams/Team1/${team1[2]}`).set({
+        score:0,
+        strikes:0
+      });
+      database.ref(`/games/${selected_mode}/${maker}/Teams/Team2/${team2[2]}`).set({
+        score:0,
+        strikes:0
+      });
+      }
+      if(selected_mode == '4v4')
+      {
+        database.ref(`/games/${selected_mode}/${maker}/Teams/Team1/${team1[3]}`).set({
+        score:0,
+        strikes:0
+      });
+      database.ref(`/games/${selected_mode}/${maker}/Teams/Team2/${team2[3]}`).set({
+        score:0,
+        strikes:0
+      });
+      }
+
+      
+      
+      let randomIndex = Math.floor(Math.random() * team1.length);
+      let randomValue = team1[randomIndex];
+      database.ref(`/games/${selected_mode}/${maker}/Teams/Team1/captain`)
+      .set(randomValue);
+
+      let randomIndex1 = Math.floor(Math.random() * team2.length);
+      let randomValue1 = team2[randomIndex1];
+      database.ref(`/games/${selected_mode}/${maker}/Teams/Team2/captain`)
+      .set(randomValue1);
+
+      //team-1
+      
+      // Clear the matchmaking queue
+      lobbyRef.child('matchmaker').remove();      ;
+      findValueInLists(username, team1, team2);
+      // Clear individual player entries
+      team1.forEach(player => lobbyRef.child(player).remove());
+      team2.forEach(player => lobbyRef.child(player).remove());
+
+      team1.forEach(player => lobbyRef.child('matchmakingQueue').child(player).remove());
+      team2.forEach(player => lobbyRef.child('matchmakingQueue').child(player).remove());
+      // Remove the entire lobby node (optional, depending on your needs) 
+      
+      // Handle the teams and navigate to the game page
+if(selected_mode=='2v2')
+  {
+    window.location.href = "/two";
+  }
+  if(selected_mode=='3v3')
+  {
+    window.location.href = "/three";
+  }
+  if(selected_mode=='4v4')
+  {
+    window.location.href = "/four";
+  }    
+    }
+  });
+  }
+  });  
+
+}
+
+function findValueInLists(value, list1, list2) {
+  const indexInList1 = list1.indexOf(value);
+  const indexInList2 = list2.indexOf(value);
+
+  const result = {};
+
+  if (indexInList1 !== -1) {
+    result.positionInList1 = indexInList1;
+    localStorage.setItem('your_team','Team1');
+    localStorage.setItem('your_position',`${indexInList1}`);
+    localStorage.setItem('score',`/games/${selected_mode}/${maker}/Teams/Team1/${username}/score`);
+    localStorage.setItem('strikes',`/games/${selected_mode}/${maker}/Teams/Team1/${username}/strikes`);
+    localStorage.setItem('currentPlayer',`/games/${selected_mode}/${maker}/Teams/Team1/currentPlayer`);
+    localStorage.setItem('op_current',`/games/${selected_mode}/${maker}/Teams/Team2/currentPlayer`);    
+    localStorage.setItem('team-score',`/games/${selected_mode}/${maker}/Teams/Team1/score`);
+  localStorage.setItem('number',`/games/${selected_mode}/${maker}/Teams/Team1/number`);
+  localStorage.setItem('option',`/games/${selected_mode}/${maker}/Teams/Team1/option`);
+  localStorage.setItem('choice',`/games/${selected_mode}/${maker}/Teams/Team1/choice`);
+  localStorage.setItem('status',`/games/${selected_mode}/${maker}/Teams/Team1/status`);
+  localStorage.setItem('captain-ref',`/games/${selected_mode}/${maker}/Teams/Team1/captain`);
+  localStorage.setItem('team-strikes',`/games/${selected_mode}/${maker}/Teams/Team1/strikes`);  
+  localStorage.setItem('op-score',`/games/${selected_mode}/${maker}/Teams/Team2/score`);
+  localStorage.setItem('op-number',`/games/${selected_mode}/${maker}/Teams/Team2/number`);
+  localStorage.setItem('op-option',`/games/${selected_mode}/${maker}/Teams/Team2/option`);
+  localStorage.setItem('op-choice',`/games/${selected_mode}/${maker}/Teams/Team2/choice`);
+  localStorage.setItem('op-status',`/games/${selected_mode}/${maker}/Teams/Team2/status`);
+  localStorage.setItem('op-captain-ref',`/games/${selected_mode}/${maker}/Teams/Team2/captain`);
+  localStorage.setItem('op-strikes',`/games/${selected_mode}/${maker}/Teams/Team2/strikes`); 
+  }
+
+  if (indexInList2 !== -1) {
+    result.positionInList2 = indexInList2;
+    localStorage.setItem('your_team','Team2');
+    localStorage.setItem('your_position',`${indexInList2}`);
+    localStorage.setItem('score',`/games/${selected_mode}/${maker}/Teams/Team2/${username}/score`);
+    localStorage.setItem('strikes',`/games/${selected_mode}/${maker}/Teams/Team2/${username}/strikes`);
+    localStorage.setItem('currentPlayer',`/games/${selected_mode}/${maker}/Teams/Team2/currentPlayer`);
+    localStorage.setItem('op_current',`/games/${selected_mode}/${maker}/Teams/Team1/currentPlayer`);    
+    localStorage.setItem('op-score',`/games/${selected_mode}/${maker}/Teams/Team1/score`);
+  localStorage.setItem('op-number',`/games/${selected_mode}/${maker}/Teams/Team1/number`);
+  localStorage.setItem('op-option',`/games/${selected_mode}/${maker}/Teams/Team1/option`);
+  localStorage.setItem('op-choice',`/games/${selected_mode}/${maker}/Teams/Team1/choice`);
+  localStorage.setItem('op-status',`/games/${selected_mode}/${maker}/Teams/Team1/status`);
+  localStorage.setItem('op-captain-ref',`/games/${selected_mode}/${maker}/Teams/Team1/captain`);
+  localStorage.setItem('op-strikes',`/games/${selected_mode}/${maker}/Teams/Team1/strikes`);  
+  localStorage.setItem('team-score',`/games/${selected_mode}/${maker}/Teams/Team2/score`);
+  localStorage.setItem('team-number',`/games/${selected_mode}/${maker}/Teams/Team2/number`);
+  localStorage.setItem('option',`/games/${selected_mode}/${maker}/Teams/Team2/option`);
+  localStorage.setItem('choice',`/games/${selected_mode}/${maker}/Teams/Team2/choice`);
+  localStorage.setItem('status',`/games/${selected_mode}/${maker}/Teams/Team2/status`);
+  localStorage.setItem('captain-ref',`/games/${selected_mode}/${maker}/Teams/Team2/captain`);
+  localStorage.setItem('team-strikes',`/games/${selected_mode}/${maker}/Teams/Team2/strikes`); 
+    
+  }
+
+}
+
+
+setTimeout(function() {
+    lobbyRef.on('value', function(snapshot) {
+      const lobbyData = snapshot.val();
+      console.log("I am running");
+      if (match_maker) {
+        tryMatchmaking(username);
+      } else if (!lobbyData.matchmaker) {
+        // If no matchmaker, make the 1st player in the list as the matchmaker
+        lobbyRef.child('matchmakingQueue').once('value').then((snapshot) => {
+          const players = snapshot.val();
+          const player = Object.values(players)[0];
+          lobbyRef.update({ matchmaker: player });
+        });    
+        console.log(`matchmaker is there.`);
+        match_maker = true;
+        tryMatchmaking(maker);
+      }
+    });
+  }, 1000); // 1000 milliseconds = 1 second
+
+
+database.ref(`/games/1v1/${mm}`).on('value', (snapshot) => {
+  const matchInfo = snapshot.val();
+  if (matchInfo) {    
+    localStorage.setItem("maker_id", mm);
+    localStorage.setItem("player1", matchInfo.player1);
+    localStorage.setItem("player2", matchInfo.player2);
+  }
+});
+database.ref(`games/2v2/${mm}`).on('value', function(snapshot)
+{
+  const matchInfo = snapshot.val();  
+     
+  localStorage.setItem('match-maker',`${mm}`);
+
+  const indexInList1 = Team1.indexOf(value);
+  const indexInList2 = Team2.indexOf(value);
+
+  const result = {};
+
+  if (indexInList1 !== -1) {
+    result.positionInList1 = indexInList1;
+    localStorage.setItem('your_team','Team1');
+    localStorage.setItem('your_position',`${indexInList1}`);
+    localStorage.setItem('score',`/games/${selected_mode}/${mm}/Teams/Team1/${username}/score`);
+    localStorage.setItem('strikes',`/games/${selected_mode}/${mm}/Teams/Team1/${username}/strikes`);
+    localStorage.setItem('currentPlayer',`/games/${selected_mode}/${mm}/Teams/Team1/currentPlayer`);
+    localStorage.setItem('op_current',`/games/${selected_mode}/${mm}/Teams/Team2/currentPlayer`);   
+    localStorage.setItem('team-score',`/games/${selected_mode}/${mm}/Teams/Team1/score`);
+  localStorage.setItem('number',`/games/${selected_mode}/${mm}/Teams/Team1/number`);
+  localStorage.setItem('option',`/games/${selected_mode}/${mm}/Teams/Team1/option`);
+  localStorage.setItem('choice',`/games/${selected_mode}/${mm}/Teams/Team1/choice`);
+  localStorage.setItem('status',`/games/${selected_mode}/${mm}/Teams/Team1/status`);
+  localStorage.setItem('captain-ref',`/games/${selected_mode}/${mm}/Teams/Team1/captain`);
+  localStorage.setItem('team-strikes',`/games/${selected_mode}/${mm}/Teams/Team1/strikes`);  
+  localStorage.setItem('op-score',`/games/${selected_mode}/${mm}/Teams/Team2/score`);
+  localStorage.setItem('op-number',`/games/${selected_mode}/${mm}/Teams/Team2/number`);
+  localStorage.setItem('op-option',`/games/${selected_mode}/${mm}/Teams/Team2/option`);
+  localStorage.setItem('op-choice',`/games/${selected_mode}/${mm}/Teams/Team2/choice`);
+  localStorage.setItem('op-status',`/games/${selected_mode}/${mm}/Teams/Team2/status`);
+  localStorage.setItem('op-captain-ref',`/games/${selected_mode}/${mm}/Teams/Team2/captain`);
+  localStorage.setItem('op-strikes',`/games/${selected_mode}/${mm}/Teams/Team2/strikes`); 
+  }
+
+  if (indexInList2 !== -1) {
+    result.positionInList2 = indexInList2;
+    localStorage.setItem('your_team','Team2');
+    localStorage.setItem('your_position',`${indexInList2}`);
+    localStorage.setItem('score',`/games/${selected_mode}/${mm}/Teams/Team2/${username}/score`);
+    localStorage.setItem('strikes',`/games/${selected_mode}/${mm}/Teams/Team2/${username}/strikes`);
+    localStorage.setItem('currentPlayer',`/games/${selected_mode}/${mm}/Teams/Team2/currentPlayer`);
+    localStorage.setItem('op_current',`/games/${selected_mode}/${mm}/Teams/Team1/currentPlayer`);    
+    localStorage.setItem('op-score',`/games/${selected_mode}/${mm}/Teams/Team1/score`);
+  localStorage.setItem('op-number',`/games/${selected_mode}/${mm}/Teams/Team1/number`);
+  localStorage.setItem('op-option',`/games/${selected_mode}/${mm}/Teams/Team1/option`);
+  localStorage.setItem('op-choice',`/games/${selected_mode}/${mm}/Teams/Team1/choice`);
+  localStorage.setItem('op-status',`/games/${selected_mode}/${mm}/Teams/Team1/status`);
+  localStorage.setItem('op-captain-ref',`/games/${selected_mode}/${mm}/Teams/Team1/captain`);
+  localStorage.setItem('op-strikes',`/games/${selected_mode}/${mm}/Teams/Team1/strikes`);  
+  localStorage.setItem('team-score',`/games/${selected_mode}/${mm}/Teams/Team2/score`);
+  localStorage.setItem('team-number',`/games/${selected_mode}/${mm}/Teams/Team2/number`);
+  localStorage.setItem('option',`/games/${selected_mode}/${mm}/Teams/Team2/option`);
+  localStorage.setItem('choice',`/games/${selected_mode}/${mm}/Teams/Team2/choice`);
+  localStorage.setItem('status',`/games/${selected_mode}/${mm}/Teams/Team2/status`);
+  localStorage.setItem('captain-ref',`/games/${selected_mode}/${mm}/Teams/Team2/captain`);
+  localStorage.setItem('team-strikes',`/games/${selected_mode}/${mm}/Teams/Team2/strikes`); 
+    
+  } 
+  window.location.href = "/two";   
+}
+);
+
+// Clean up when the player disconnects
+
+
+function playSoundEffect() {
+  var audio = new Audio('../static/select.wav');
+  audio.play();
+}
+
+document.body.addEventListener('click', function (event) {        
+  playSoundEffect();            
+});
+</script>
+</body>
+</html>

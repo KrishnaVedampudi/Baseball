@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baseball Battle</title>
+    <link rel="icon" href="../static/logo.png" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Google Fonts - Orbitron -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+    body {
+        font-family: 'Orbitron', sans-serif;
+        background-color: black;
+        color: #fff;
+        padding-top: 20px;
+        text-align:center;
+        align-items: center;
+    }
+
+    .container {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px;
+        align-items: center;
+    }        
+
+    .item-container {
+        display: flex;
+        flex-direction: column;
+        width: 45%;
+        justify-content: space-between;
+    }
+
+    .item-container.left {
+        float:left;
+        margin-right: 30%;
+        
+        justify-content: flex-start;
+    }
+
+    .item-container.right {
+        float:right;
+        margin-left: 30%;        
+    }
+
+    .team-stats-container {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px;
+        height:fit-content;
+        padding:10px;
+        background-color: red;
+        border-radius:15px;
+        width:25%;
+    }
+
+    .team-stats {
+        display: flex;
+        justify-content: space-between;
+        justify-content: flex flex-end;
+    }
+
+        .item {
+            border: 1px solid #5bc0de;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+    .main-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        margin-top: 20px;
+    }
+
+    .player-list {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        margin: 20px;
+    }
+
+    .player-item {
+        display: flex;
+        align-items: center;
+        margin: 5px;
+    }
+
+    .player-item span {
+        margin-right: 5px;
+    }
+
+    .number-container {
+       
+    display:flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 20px auto; /* Set margin to auto to center horizontally */
+    position: fixed;
+    align-items: center;
+    bottom: 0;
+    left: 50%; /* Set left to 50% to center horizontally */
+    transform: translateX(-50%); /* Use translateX to adjust for the container width */
+    background-color: rgba(128, 128, 128, 0.177);
+    padding: 10px;
+    border-radius: 15px;        
+    }
+
+    .number-container-option {
+        display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 20px auto; /* Set margin to auto to center horizontally */   
+    align-items: center;
+    bottom:0;
+     /* Use translateX to adjust for the container width */
+    background-color: rgba(128, 128, 128, 0.177);
+    padding: 10px;
+    border-radius: 15px;        
+    }
+
+      
+    .number {
+        border: 1px solid #5bc0de;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 5px;      
+        background-color:black;  
+    }
+    .number:hover
+    {
+        cursor:pointer !important;
+    }
+    p:hover
+    {
+        cursor:pointer !important;
+    }
+    .number-option {
+        border: 1px solid #5bc0de;
+        border-radius: 10px;
+        padding: 10px;
+        background-color:black;
+        margin: 5px;
+        
+    }
+    .team-stats-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+            height:fit-content;
+            padding:10px;
+            background-color: red;
+            border-radius:15px;
+            width:30%;
+        }
+
+    .team-stats 
+    {
+            display: flex;
+            justify-content: space-between;
+    }
+
+    #game_events
+    {
+        width:60%!important;
+    }
+    .modal-content {
+            background-color: black;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            text-align: center;
+            align-items: center;
+        }
+
+        .close {
+            color: rgb(218, 216, 216);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        #option
+        {
+            background-color: black;
+        }
+
+        /* Other CSS styles remain the same */
+        /* ... */
+    </style>
+</head>
+
+<body>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Choose Odd or Even & A Number , Then close the modal</h3>
+            <button class="number" id="option" onclick="chooseOption('odd')">Odd</button>
+            <button class="number" id="option" onclick="chooseOption('even')">Even</button>
+            <div class="number-container-option">
+                <button class="number-option" onclick="storeNumber(this)"><p>1</p></button>
+                <button class="number-option" onclick="storeNumber(this)"><p>2</p></button>
+                <button class="number-option" onclick="storeNumber(this)"><p>3</p></button>
+                <button class="number-option" onclick="storeNumber(this)"><p>4</p></button>
+                <button class="number-option" onclick="storeNumber(this)"><p>5</p></button>
+                <button class="number-option" onclick="storeNumber(this)"><p>6</p></button>
+                <button class="number-option" onclick="storeNumber(this)"><p>7</p></button>
+                <button class="number-option" onclick="storeNumber(this)"><p>8</p></button>
+                <button class="number-option" onclick="storeNumber(this)"><p>9</p></button>
+                <button class="number-option" onclick="storeNumber(this)"><p>10</p></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Congratulations!</h4>
+              <button type="button" class="close" data-dismiss="modal" onclick="closeoption()">&times;</button>
+            </div>
+            <div class="modal-body">
+              <p>Please choose your next action:</p>
+              <button type="button" class="btn btn-success" data-dismiss="modal" onclick="setStatus('Batting')">Batting</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="setStatus('Bowling')">Bowling</button>
+            </div>                
+          </div>
+        </div>
+      </div>
+    <h1>Baseball Battle</h1>
+    <h2>Welcome to the arena where you battle it out with your opponents</h2>
+    <center>
+    <div class="team-stats-container">
+        <div class="team-stats">
+          <div>
+           Your team
+            <br>
+            <br>
+              Score:<p id="team_score"></p> 
+              <br>
+              Strikes : <p id="team_strikes"></p>
+                             
+          </div>
+          
+          &nbsp; &nbsp; &nbsp; 
+          &nbsp; &nbsp; &nbsp;
+          &nbsp; &nbsp; &nbsp; 
+          &nbsp; &nbsp; &nbsp;
+          <div>
+              Opponent team
+              <br>
+              <br>
+              Score:<p id="op_score"></p>
+              <br>
+              Strikes Lost: <p id="op_strikes"></p>      
+          </div>
+      </div>
+    </div>
+</center>  
+<center>
+<div id="game_events">
+            
+</div>
+</center> 
+      
+    <br>
+    <audio id="audioPlayer" autoplay preload="auto" volume="0.75">
+        <source src="../static/bgm.mp3" type="audio/mp3">
+    </audio>
+    <div class="main-container">
+        <div class="item-container left">        
+        <div class="item" onclick="selectItem(1)">
+        <div class="player-item">
+              <span id="your_name">You</span>
+              <span id="your_score">Score: 100</span>
+              <span id="your_strikes">Strikes Lost: 2</span>              
+        </div>
+    </div>    
+    <br>              
+        <div class="item" onclick="selectItem(2)">
+            <div class="player-item">
+              <span id="your_name1" >Team mate</span>
+                           
+              <span id="your_score1">Score: 90</span>
+              <span id="your_strikes1">Strikes Lost: 1</span>
+          </div>
+      </div>
+            
+        </div>
+        <div class="item-container right">          
+          <div class="item" onclick="selectItem(1)">
+            <div class="player-item">
+                <span id="opponent_name">Opponent</span>
+                                             
+            </div>
+          </div>
+          <br> 
+          <br>
+        <br>
+          <div class="item" onclick="selectItem(2)">
+            <div class="player-item">
+                
+            <span id="opponent_name_1">Opponent</span>
+          </div>
+      </div>
+    </div>
+  </div>
+  </div>   
+    <div class="number-container">
+        <div class="number" onclick="storeNumber(this)">1</div>
+        <div class="number" onclick="storeNumber(this)">2</div>
+        <div class="number" onclick="storeNumber(this)">3</div>
+        <div class="number" onclick="storeNumber(this)">4</div>
+        <div class="number" onclick="storeNumber(this)">5</div>
+        <div class="number" onclick="storeNumber(this)">6</div>
+        <div class="number" onclick="storeNumber(this)">7</div>
+        <div class="number" onclick="storeNumber(this)">8</div>
+        <div class="number" onclick="storeNumber(this)">9</div>
+        <div class="number" onclick="storeNumber(this)">10</div>
+    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>
+
+
+  <!-- Include Bootstrap JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <script>
+
+
+    
+   
+const firebaseConfig = {
+    apiKey: "AIzaSyD-BBshNUbgt-c1qiSyVqcMLGhf0iz864g",
+    authDomain: "baseball-37e0d.firebaseapp.com",
+    projectId: "baseball-37e0d",
+    storageBucket: "baseball-37e0d.appspot.com",
+    messagingSenderId: "422995163027",
+    appId: "1:422995163027:web:4b49ffa090ca952ad55a66",
+    measurementId: "G-792QSK4ZY7"
+     
+    }
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();  
+    var username = localStorage.getItem('username');
+var match_maker = firebase.database().ref(localStorage.getItem('match-maker'));
+var my_team = localStorage.getItem('your-team');
+var my_position = localStorage.getItem('your-position');
+var team_score = firebase.database().ref(localStorage.getItem('team-score'));
+var team_strikes = firebase.database().ref(localStorage.getItem('team-strikes'));
+var score = firebase.database().ref(localStorage.getItem('score'));
+var strikes = firebase.database().ref(localStorage.getItem('strikes'));
+var choice = firebase.database().ref(localStorage.getItem('choice'));
+var option = firebase.database().ref(localStorage.getItem('option'));
+var captain = firebase.database().ref(localStorage.getItem('captain'));
+var captainRef = firebase.database().ref(localStorage.getItem('captain-ref'));
+var pl_status = firebase.database().ref(localStorage.getItem('status'));
+var number = firebase.database().ref(localStorage.getItem('number'));
+
+console.log(score);
+var op_num;
+var playerStrikes = 0;
+var opponentStrikes = 0;
+var selectedNumber = 0;
+var playerScore = 0;
+var opponentScore = 0;
+var op_option_val;
+var chosen_option;
+var op_score = firebase.database().ref(localStorage.getItem('op-score'));
+var op_strikes = firebase.database().ref(localStorage.getItem('op-strikes'));
+var op_choice = firebase.database().ref(localStorage.getItem('op-choice'));
+var op_option = firebase.database().ref(localStorage.getItem('op-option'));
+var op_captain = firebase.database().ref(localStorage.getItem('op-captain'));
+var op_captainRef = firebase.database().ref(localStorage.getItem('op-captain-ref'));
+var op_status = firebase.database().ref(localStorage.getItem('op-status'));
+var op_number = firebase.database().ref(localStorage.getItem('op-number'));
+var captainism = false;
+var currentPlayer = firebase.database().ref(localStorage.getItem('currentPlayer'));
+var op_current = firebase.database().ref(localStorage.getItem('op_current'));
+window.onload = function() {
+var modal = document.getElementById('myModal');
+modal.style.display = "block";
+};
+captain.once('value', function(snapshot)
+{
+    captain_value = snapshot.val();
+if(captain_value==username)
+    {
+        captainism = true;        
+    }
+
+    
+});
+
+if(!captainism)
+{
+    let modal = document.getElementById('myModal');
+    modal.style.display = 'none';
+}
+
+function setStatus(chosen_status)
+{
+    if(captainism)
+    {
+    status = chosen_status;
+    if(status == 'Batting')
+    {
+        op_status.set('Bowling');
+    }
+    else
+    {
+        op_status.set('Batting');
+    }
+    pl_status.set(status);
+
+    var modal = document.getElementById('resultModal');
+    modal.style.display = 'none';
+}
+
+}
+
+function exit()
+{
+window.location.href="{{ url_for('main') }}";
+}
+
+function closeoption() 
+{
+let modal = document.getElementById("resultModal");
+modal.style.display = "none";
+}
+
+function closeModal() {
+let modal = document.getElementById("myModal");
+modal.style.display = "none";
+}
+
+
+function chooseOption(chosen_option) {
+if(captainism)
+{
+    console.log(chosen_option);
+    option.set(chosen_option);  
+    if(chosen_option == 'even')
+    {    
+        op_option.set('odd')
+        option_op = 'odd';
+    }
+    else if(chosen_option == 'odd')
+    {
+        op_option.set('even')
+        option_op = 'even';
+    }
+    if(status == null)
+    {              
+        odd_even(op_option_val, chosen_option, selectedNumber, op_num);    
+    }
+    if(status==null && selectedNumber!=0)
+    {
+        var modal = document.getElementById('myModal');
+        modal.style.display = 'none';
+    }
+    }
+}
+
+captain.on('value', function(snapshot)
+{
+    captain_value = snapshot.val();
+    if(captain_value == username)
+    {
+        captainism = true;
+    }
+});
+
+function storeNumber(element) {
+selectedNumber = parseInt(element.innerText); 
+number.set(selectedNumber)
+if(status == null)
+{
+    op_number.once('value', function(snapshot)
+    {
+        if(snapshot.exists() && chosen_option!=null)
+        {            
+            op_num = snapshot.val();        
+            odd_even(chosen_option, selectedNumber, op_num);
+        }
+    });
+}
+if(chosen_option != null && status==null)
+{
+    var modal = document.getElementById('myModal');
+    modal.style.display = 'none';
+}
+if(status!=null && op_num!=null)
+{
+    op_number.once('value', function(snapshot)
+    {
+        if(snapshot.exists())
+        {
+            op_num = snapshot.val();            
+            loop(status, selectedNumber, op_num);
+        }
+    });
+}
+}
+
+
+op_option.on('value', function(snapshot) {       
+    op_option_val = snapshot.val();
+
+    if(op_option_val == 'even' && chosen_option==null){
+        document.getElementById('game_events').innerText = "Your opponent chose even and therefore your are forced to pick odd.";  
+        if(selectedNumber!=null)
+        {
+            alert('Pick a number since your opponent forced you to choose odd');
+            var modal = document.getElementById('myModal');
+            modal.style.display = 'none';
+        }
+        chosen_option = 'odd';  
+        }
+        if(op_option_val == 'odd' && chosen_option==null){
+            document.getElementById('game_events').innerText = "Your opponent chose odd and therefore you are forced to chose even.";
+            if(selectedNumber!=null)
+            {
+                alert('Pick a number since your opponent forced you to choose even');
+                var modal = document.getElementById('myModal');
+                modal.style.display = 'none';
+            }
+            chosen_option = 'even';  
+        }
+    
+    
+});
+
+function swapPlayers(element)
+{
+    player = element.innerText;
+    if(player == 'You')
+    {
+        currentPlayer.set(username);
+    }
+    if(player == 'Team mate')
+    {
+        currentPlayer.set();
+    }
+    
+    alert('Current player has changed');
+}
+
+op_score.on('value', function(snapshot)
+{
+const score = snapshot.val();
+document.getElementById('op_score').innerText = score;
+
+});
+op_strikes.on('value', function(snapshot)
+{
+const strikes = snapshot.val();
+document.getElementById('op_strikes').innerText = strikes;
+
+});
+
+score.on('value', function(snapshot)
+{
+const score = snapshot.val();
+document.getElementById('team_score').innerText=score;
+});
+
+strikes.on('value', function(snapshot)
+{
+const strikes = snapshot.val();
+document.getElementById('team_strikes').innerText=strikes;
+});
+
+choice.on('value', function(snapshot)
+{
+choice = snapshot.val();
+if(choice == 'Batting')
+{
+    status = 'Bowling';
+}
+else if(choice == 'Bowling')
+{
+    status = 'Batting';
+}
+
+});
+
+op_number.on('value', function(snapshot)
+{
+ opponentNumber=snapshot.val();
+
+if(status == null)
+{                           
+    odd_even( chosen_option, selectedNumber, opponentNumber);
+       
+}
+if(status !=null && selectedNumber!=0)
+{
+        loop(status, selectedNumber, opponentNumber);
+}
+});
+
+function odd_even(chosen_option, selectedNumber, op_num)
+{
+    if(op_num !=null && selectedNumber !=null)
+    {
+    let sum = selectedNumber+op_num
+    if(sum%2!=0)
+    {
+        if(chosen_option=='odd')
+        {
+            var modal = document.getElementById('resultModal');
+            modal.style.display = "block";
+                          
+        }else if(chosen_option == 'even')
+        {                
+            if(status=='Batting')
+            {
+                document.getElementById("game_events").innerText ='Your opponent chose Batting';
+            }
+            if(status=='Bowling')
+            {
+                document.getElementById("game_events").innerText ='Your opponent chose Bowling';
+            }                
+        }
+    }else if(sum%2==0)
+    {
+        if(chosen_option=='even')
+        {
+            var modal = document.getElementById('resultModal');
+            modal.style.display = "block";
+            
+        }else if(chosen_option=='odd')
+        {                
+            if(status=='Batting')
+            {
+                document.getElementById("game_events").innerText ='Your opponent chose Batting';
+            }
+            if(status=='Bowling')
+            {
+                document.getElementById("game_events").innerText ='Your opponent chose Bowling';
+            }  
+        }
+    }
+    selectedNumber=null;
+    op_num=null;
+}    
+}
+
+function loop(status, selectedNumber, opponentNumber)
+{
+if(currentPlayer && playerStrikes==3)
+{
+    console.log(opponentNumber);
+    console.log(selectedNumber);
+   
+if (playerStrikes < 3 && opponentStrikes == 3) {                        
+    status = "Batting";
+    console.log(status);
+}else if(playerStrikes == 3 && opponentStrikes <3)
+{
+    status="Bowling";
+}
+if (status == "Batting") {
+    if(playerStrikes<3 && opponentStrikes==3 && playerScore>opponentScore)
+        {
+            document.getElementById("game_events").innerText ="You Won!";
+            alert("You will be redirected.");
+            database.ref.child('users').child(username).child('Matches played').once('value', function(snapshot)
+                {
+                    var matches_played = snapshot.val();
+                    matches_played +=1;
+                    database.ref.child('users').child(username).child('Matches played').set(matches_played);
+
+                });
+                database.ref.child('users').child(username).child('Total matches won').once('value', function(snapshot)
+                {
+                    var matches_won = snapshot.val();
+                    matches_won +=1;
+                    database.ref.child('users').child(username).child('Total matches won').set(matches_lost);
+
+                });
+                database.ref.child('users').child(username).child('Score').once('value', function(snapshot)
+                {
+                    var score = snapshot.val();
+                    score =  score+1;
+                    database.ref.child('users').child(username).child('Score').set(score);
+
+                });
+                database.ref.child('users').child(username).child('Best score').once('value', function(snapshot)
+                {
+                    var best_score = snapshot.val();
+                    if(playerScore>best_score)
+                    {
+                        database.ref.child('users').child(username).child('Best score').set(best_score);
+                    }                   
+                });
+            status = null;
+            opponentStrikes=0;
+            playerScore=0;
+            opponentStrikes=0;
+            opponentScore=0;
+            window.location.href="{{ url_for('main') }}";
+        }
+    if (selectedNumber == opponentNumber) {
+        playerScore = selectedNumber*2;
+        document.getElementById("your_score").innerText = `${playerScore}`;
+        score.set(playerScore)        
+        document.getElementById("game_events").innerText = "You scored a double";    
+    } else if (Math.abs(selectedNumber - opponentNumber) == 1) {        
+        playerStrikes = playerStrikes+1;
+        document.getElementById("your_strikes").innerText = `${playerStrikes}`;
+        document.getElementById("game_events").innerText = `You now have ${playerStrikes} strikes.`;
+        strikes.set(playerStrikes)
+        if (playerStrikes == 3 && opponentStrikes<3) {                        
+            status = "Bowling";
+            console.log(status);
+        }
+        else if(playerStrikes == 3 && opponentStrikes == 3) 
+        {
+            if (playerScore - opponentScore > 0) {
+                document.getElementById("game_events").innerText ="You Won!";
+                database.ref.child('users').child(username).child('Matches played').once('value', function(snapshot)
+                {
+                    var matches_played = snapshot.val();
+                    matches_played +=1;
+                    database.ref.child('users').child(username).child('Matches played').set(matches_played);
+
+                });
+                database.ref.child('users').child(username).child('Total matches won').once('value', function(snapshot)
+                {
+                    var matches_won = snapshot.val();
+                    matches_won +=1;
+                    database.ref.child('users').child(username).child('Total matches won').set(matches_lost);
+
+                });
+                database.ref.child('users').child(username).child('Score').once('value', function(snapshot)
+                {
+                    var score = snapshot.val();
+                    score =  score+1;
+                    database.ref.child('users').child(username).child('Score').set(score);
+
+                });
+                database.ref.child('users').child(username).child('Best score').once('value', function(snapshot)
+                {
+                    var best_score = snapshot.val();
+                    if(playerScore>best_score)
+                    {
+                        database.ref.child('users').child(username).child('Best score').set(best_score);
+                    }                   
+                });
+                status = null;
+                alert("You will be redirected.");
+                playerStrikes=0;
+                playerScore=0;
+                opponentStrikes=0;
+                opponentScore=0;     
+                window.location.href="{{ url_for('main') }}";                   
+            } else {
+                document.getElementById("game_events").innerText ="Your opponent Won!";
+                status = null;
+                database.ref.child('users').child(username).child('Matches played').once('value', function(snapshot)
+                {
+                    var matches_played = snapshot.val();
+                    matches_played +=1;
+                    database.ref.child('users').child(username).child('Matches played').set(matches_played);
+
+                });
+                database.ref.child('users').child(username).child('Total matches lost').once('value', function(snapshot)
+                {
+                    var matches_lost = snapshot.val();
+                    matches_lost +=1;
+                    database.ref.child('users').child(username).child('Total matches lost').set(matches_lost);
+
+                });
+                database.ref.child('users').child(username).child('Score').once('value', function(snapshot)
+                {
+                    var score = snapshot.val();
+                    score =  score-1;
+                    database.ref.child('users').child(username).child('Score').set(score);
+
+                });
+                database.ref.child('users').child(username).child('Best score').once('value', function(snapshot)
+                {
+                    var best_score = snapshot.val();
+                    if(playerScore>best_score)
+                    {
+                        database.ref.child('users').child(username).child('Best score').set(best_score);
+                    }                   
+                });
+                alert("You will be redirected.");
+                playerStrikes=0;
+                playerScore=0;
+                opponentStrikes=0;
+                opponentScore=0;
+                window.location.href="{{ url_for('main') }}";
+            }
+        }else if (opponentStrikes == 3 && playerScore == 0 &&playerStrikes<3) {
+            status = "Bowling";
+        }
+                
+     } else {
+        playerScore += selectedNumber;
+        score.set(playerScore)
+        document.getElementById("your_score").innerText = `${playerScore}`;
+    }
+}
+if (status == "Bowling") {
+    if(opponentStrikes<3 && playerStrikes==3 && opponentScore>playerScore)
+    {
+        document.getElementById("game_events").innerText ="You Won!";
+        status = null;
+        database.ref.child('users').child(username).child('Matches played').once('value', function(snapshot)
+                {
+                    var matches_played = snapshot.val();
+                    matches_played +=1;
+                    database.ref.child('users').child(username).child('Matches played').set(matches_played);
+
+                });
+                database.ref.child('users').child(username).child('Total matches won').once('value', function(snapshot)
+                {
+                    var matches_won = snapshot.val();
+                    matches_won +=1;
+                    database.ref.child('users').child(username).child('Total matches won').set(matches_lost);
+
+                });
+                database.ref.child('users').child(username).child('Score').once('value', function(snapshot)
+                {
+                    var score = snapshot.val();
+                    score =  score+1;
+                    database.ref.child('users').child(username).child('Score').set(score);
+
+                });
+                database.ref.child('users').child(username).child('Best score').once('value', function(snapshot)
+                {
+                    var best_score = snapshot.val();
+                    if(playerScore>best_score)
+                    {
+                        database.ref.child('users').child(username).child('Best score').set(best_score);
+                    }                   
+                });
+        alert("You will be redirected.");
+        opponentStrikes=0;
+        playerScore=0;
+        playerStrikes=0;
+        opponentScore=0;
+        window.location.href="{{ url_for('main') }}";
+    }        
+    if (selectedNumber == opponentNumber) {
+        opponentScore = opponentNumber*2;        
+        document.getElementById("game_events").innerText = "Your opponent got a double";
+        op_score.set(opponentScore);
+    } else if (Math.abs(selectedNumber - opponentNumber) == 1) {
+        opponentStrikes++;
+        
+        document.getElementById("game_events").innerText = `Congrats, your opponent got a strike`;
+        op_strikes.set(playerStrikes);
+        if (opponentStrikes== 3 && opponentStrikes<3) {
+            status = "Batting";
+        } else if (opponentStrikes == 3 && opponentStrikes==3) {
+            if (playerScore - opponentScore > 0) {
+                document.getElementById("game_events").innerText ="Your opponent Won!";
+                status = null;
+                database.ref.child('users').child(username).child('Matches played').once('value', function(snapshot)
+                {
+                    var matches_played = snapshot.val();
+                    matches_played +=1;
+                    database.ref.child('users').child(username).child('Matches played').set(matches_played);
+
+                });
+                database.ref.child('users').child(username).child('Total matches lost').once('value', function(snapshot)
+                {
+                    var matches_lost = snapshot.val();
+                    matches_lost +=1;
+                    database.ref.child('users').child(username).child('Total matches lost').set(matches_lost);
+
+                });
+                database.ref.child('users').child(username).child('Score').once('value', function(snapshot)
+                {
+                    var score = snapshot.val();
+                    score =  score-1;
+                    database.ref.child('users').child(username).child('Score').set(score);
+
+                });
+                database.ref.child('users').child(username).child('Best score').once('value', function(snapshot)
+                {
+                    var best_score = snapshot.val();
+                    if(playerScore>best_score)
+                    {
+                        database.ref.child('users').child(username).child('Best score').set(best_score);
+                    }                   
+                });
+                
+                alert("You will be redirected.");
+                opponentStrikes=0;
+                playerScore=0;
+                opponentStrikes=0;
+                opponentScore=0;    
+                window.location.href="{{ url_for('main') }}";                      
+            } else {
+                document.getElementById("game_events").innerText ="You won!";
+                status = null;
+                alert("You will be redirected.");
+                opponentStrikes=0;
+                playerScore=0;
+                opponentStrikes=0;
+                opponentScore=0;   
+                window.location.href="{{ url_for('main') }}" ;                        
+            }
+        }else if (opponentStrikes == 3 && opponentScore == 0) {
+            status = "Batting";
+        }
+    } else {
+        opponentScore += opponentNumber;
+        op_score.set(oppoentScore);
+    }
+    selectedNumber = null;    
+    op_num=null;
+}
+document.getElementById('team_score').innerText +=  playerScore;
+document.getElementById('team_strikes').innerText +=  playerStrikes;
+document.getElementById('your_score').innerText += playerScore;
+document.getElementById('your_strikes').innerText += playerStrikes;
+document.getElementById('op_score').innerText += opponentScore;
+document.getElementById('op_strikes').innerText +=  opponentStrikes;
+}
+}
+
+let selected = null;
+let items = document.querySelectorAll('.item');
+let arrowUp = document.getElementById('arrowUp');
+let arrowDown = document.getElementById('arrowDown');
+
+function selectItem(id) {
+let index = id - 1;
+if (selected) {
+    selected.classList.remove('selected');
+}
+selected = items[index];
+selected.classList.add('selected');
+adjustItems(index);
+}
+
+function adjustItems(index) {
+items.forEach((item, i) => {
+if (i < index - 1 || i > index + 1) {
+    item.style.display = 'none';
+} else {
+    item.style.display = 'block';
+}
+});
+
+        
+if (index > 0) {
+arrowUp.style.display = 'block';
+} else {
+    arrowUp.style.display = 'none';
+}
+if (index < items.length - 1) {
+arrowDown.style.display = 'block';
+} else {
+    arrowDown.style.display = 'none';
+}
+}
+
+function playSoundEffect() {
+var audio = new Audio('../static/select.mp3');
+audio.play();
+}
+var buttons = document.getElementsByTagName("button");
+for (var i = 0; i < buttons.length; i++) {
+buttons[i].addEventListener("click", playSoundEffect);
+}
+items[0].style.display = 'block';
+items[1].style.display = 'block';
+  </script>
+</body>
+</html>
