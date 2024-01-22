@@ -331,7 +331,11 @@ function denyFriendRequest()
 
         if (friendUsername != null) {
             // Update the value in the Firebase Realtime Database
+<<<<<<< HEAD
             database.ref('users/' + friendUsername).child('Friend request received').child(username).set(true)  
+=======
+            database.ref('users/' + friendUsername).child('Friend request received').update(username)  
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
                 .then(() => {
                     if(snapshot.exists()){
                     alert('Friend request sent successfully!');
@@ -342,7 +346,11 @@ function denyFriendRequest()
                 .catch((error) => {
                     console.error('Error sending friend request:', error);
                 });
+<<<<<<< HEAD
                 database.ref('users/' + username).child('Friend request sent').child(friendUsername).set(true)
+=======
+                database.ref('users/' + username).child('Friend request sent').update(friendUsername)
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
                 .then(() => {
                     alert('Friend request sent successfully!');
                 })

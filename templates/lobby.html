@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -482,3 +483,140 @@ document.body.addEventListener('click', function (event) {
 </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../static/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <title>Baseball Lobby</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+         .exit-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px;            
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+         .lobby {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            height:55vh;            
+        }
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;          
+            margin: 10px;
+        }
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background:url('../static/background.jpg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+            background-color: #000;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            align-content: center;
+            text-align: center;
+        }
+        .lobby
+        {
+            max-height:fit-content  !important;
+        }
+    </style>
+</head>
+<body>
+    <audio id="audioPlayer" autoplay preload="auto" volume="0.75">
+        <source src="../static/bgm.mp3" type="audio/mp3">
+    </audio>
+    <br>
+    <div class="exit-btn">
+        <button type="button" onclick="exit()"class="btn btn-danger">
+            <span class="glyphicon glyphicon-log-out"></span>
+        </button>
+    </div>
+    <div class="container">
+        Waiting for more players to join...
+        <div class="lobby" id="lobby">
+        <img width="200" height="200" id="profile">
+        
+    </div>
+        <div>
+            Players in the lobby:
+    
+        </div>
+        <br>
+        <div>
+            Chosen mode:
+            
+        </div>
+    </div>
+   
+
+    <script>
+        function exit()
+        {
+            window.location.href="{{ url_for('main') }}";
+        }
+        const firebaseConfig = {
+        apiKey: "AIzaSyD-BBshNUbgt-c1qiSyVqcMLGhf0iz864g",
+        authDomain: "baseball-37e0d.firebaseapp.com",
+        projectId: "baseball-37e0d",
+        storageBucket: "baseball-37e0d.appspot.com",
+        messagingSenderId: "422995163027",
+        appId: "1:422995163027:web:4b49ffa090ca952ad55a66",
+        measurementId: "G-792QSK4ZY7"        
+        };
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();   
+         document.addEventListener("DOMContentLoaded", function() {
+        if (localStorage.getItem('username') !== null) {
+            const username = localStorage.getItem('username');
+            const usersRef = database.ref('users/' + username);
+
+            // Retrieve the data from Firebase
+            usersRef.once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    
+                    document.getElementById("profile").src = userData["Profile pic"];
+                }
+            });
+        }
+    });
+        // Add profile pictures dynamically
+        
+    </script>
+    <script>
+        function playSoundEffect() {
+                var audio = new Audio('../static/select.wav');
+                audio.play();
+            }
+        document.body.addEventListener('click', function (event) {        
+              playSoundEffect();
+            
+          });
+    </script>
+
+</body>
+</html>
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Baseball Battle</title>
     <link rel="icon" href="../static/logo.png" type="image/x-icon">
+<<<<<<< HEAD
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">  
 <!-- Font Awesome CSS -->
@@ -21,15 +22,22 @@
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     
+=======
+    <!-- Bootstrap CSS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">  
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>    
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
     <script>
         function toComputer()
         {
             window.location.href="{{ url_for('singleplayer') }}";
-        }
-        
-
-        // Add event listeners to all buttons
-        
+        }        
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
@@ -51,19 +59,16 @@
             width:55px;
             height:55px;
         }
-
         .navbar {
             display: flex;
             align-items: center;
             padding: 20px;
         }
-
         .navbar-brand {
             font-size: 24px;
             color: #fff;
             margin-left: 10px;
         }
-
         .logo {
             width: 70px;
             height: 70px;
@@ -71,21 +76,25 @@
             border: 3px solid #ffffff00;
             padding: 5px;
             background-color: white;
+        }    
+        .modal-dialog{
+            color:black;
         }
+<<<<<<< HEAD
         .modal-dialog{
             color:black;
         }
 
+=======
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
         .navbar-icons {
             display: flex;
             align-items: center;
         }
-
         .profile {
             display: flex;
             align-items: center;
         }
-
         .profile img {
             width: 50px;
             height: 50px;
@@ -93,7 +102,6 @@
             margin-right: 30px;
     
         }
-
         .buttons {
             display: flex;
             flex-direction: column;
@@ -102,7 +110,6 @@
             border-radius: 10px;
             padding: 20px;
         }
-
         .btn {
             width: 200px;
             margin: 10px;
@@ -111,24 +118,20 @@
             padding: 10px;
             text-transform: uppercase;
         }
-
         .btn-warning {
             background-color: #f0ad4e;
             border-color: #f0ad4e;
         }
-
         .btn-primary {
             background-color: #5bc0de;
             border-color: #5bc0de;
         }
-
         .btn-danger {
             background-color: #d9534f;
             border-color: #d9534f;
         }
     </style>
 </head>
-
 <body>
     <br>
     <br>
@@ -149,25 +152,30 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
     
+=======
+    <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> 
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
     <div class="navbar">
         <div class="logo">
             <img src="../static/logo.png" alt="logo" />
         </div>
         <div class="navbar-brand">BaseBall Battle</div>
     </div>
-
     <div class="navbar-icons">
         <span class="fas fa-envelope" style="font-size: 24px; margin-right: 20px;"></span>
         <span class="fas fa-chart-bar" style="font-size: 24px;"></span>
     </div>
     <br>
+<<<<<<< HEAD
     
+=======
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
     <div class="profile">
         <img id="profile" src="../static/bear.png" alt="User Profile">
         <div id="name">Krishna</div>
     </div>
-
     <div class="buttons">
         <button type="button" onclick="toProfile();" class="btn btn-primary">Profile</button>        
         <button type="button" class="btn btn-primary">Events</button>        
@@ -176,7 +184,10 @@
         <button type="button" class="btn btn-primary">Guild</button>
         <button type="button" data-toggle="modal" data-target="#rulesModal" class="btn btn-warning">How to Play</button>
     </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
     <audio id="audioPlayer" autoplay preload="auto" volume="0.75">
         <source src="../static/bgm.mp3" type="audio/mp3">
     </audio>
@@ -185,7 +196,10 @@
             <span class="fas fa-sign-out-alt"></span>
         </button>
     </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
     <div class="modal fade" id="modeSelectionModal" tabindex="-1" aria-labelledby="modeSelectionModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -199,7 +213,11 @@
                 <div class="modal-body">
                     <p>Select the mode you prefer:</p>
                     <div class="form-check">
+<<<<<<< HEAD
                         <input class="form-check-input" type="radio" name="modeRadio" id="1v1">
+=======
+                        <input class="form-check-input" type="radio" name="modeRadio" id="1v1" checked>
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
                         <label class="form-check-label" for="lightModeRadio">         
                             1v1                   
                         </label>
@@ -236,8 +254,11 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
     
 
+=======
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
     <!-- Include Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script>
@@ -257,6 +278,7 @@
 {
     window.location.href="{{ url_for('profile') }}";
 }
+<<<<<<< HEAD
 function toLobby() {
     const radioButtons = ["1v1", "2v2", "3v3", "4v4", "custom"];
     let selectedMode;
@@ -288,6 +310,45 @@ function toLobby() {
   
 
 
+=======
+function toLobby()
+{
+    one = document.getElementById("1v1");
+    two = document.getElementById("2v2");
+    three = document.getElementById("3v3");
+    four = document.getElementById("4v4");
+    custom = document.getElementById("5v5");
+    if(one.checked)
+    {
+    localStorage.setItem("PVPmode", "1v1");
+    window.location.href="{{ url_for('lobby') }}";
+    }else if(one.checked)
+    {
+    localStorage.setItem("PVPmode", "2v2");
+    window.location.href="{{ url_for('lobby') }}";
+    }
+    else if(two.checked)
+    {
+    localStorage.setItem("PVPmode", "3v3");
+    window.location.href="{{ url_for('lobby') }}";
+    }
+    else if(three.checked)
+    {
+    localStorage.setItem("PVPmode", "4v4");
+    window.location.href="{{ url_for('lobby') }}";
+    }
+    else if(four.checked)
+    {
+    localStorage.setItem("PVPmode", "5v5");
+    window.location.href="{{ url_for('lobby') }}";
+    }
+    else if(five.checked)
+    {
+    localStorage.setItem("PVPmode", "custom");
+    window.location.href="{{ url_for('lobby') }}";
+    }
+}
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
     // Initialize Firebase
  
         // Check local storage on page load
@@ -295,17 +356,19 @@ function toLobby() {
         // Check if username key exists in local storage
         if (localStorage.getItem('username') !== null) {
             // Get the value from the username key in local storage
+<<<<<<< HEAD
             const username = localStorage.getItem('username');
             
+=======
+            const username = localStorage.getItem('username');            
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
             const usersRef = database.ref('users/' + username);
-
             // Retrieve the data from Firebase
             usersRef.once('value', (snapshot) => {
                 if (snapshot.exists()) {
                     const userData = snapshot.val();                    
                     const profilePicture = userData['Profile pic'];
-                    document.getElementById("profile").src=profilePicture;                                
-
+                    document.getElementById("profile").src=profilePicture;
                 } else {
                     console.log("User does not exist in the database.");
                 }
@@ -323,19 +386,20 @@ function toLobby() {
                         if (snapshot.exists()) {
                             const userData = snapshot.val();                    
                             const profilePicture = userData['Profile pic'];
-                            document.getElementById("profile").src=profilePicture;                                
-
+                            document.getElementById("profile").src=profilePicture;       
                         } else {
                             console.log("User does not exist in the database.");
                         }
             });
-                                                   
-
                 } else {
                     console.log("User does not exist in the database.");
                 }
+<<<<<<< HEAD
             });
             
+=======
+            });            
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
         }
     });
     
@@ -351,5 +415,8 @@ function toLobby() {
         
       });
 </script>
+<<<<<<< HEAD
 
+=======
+>>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
 </html>
