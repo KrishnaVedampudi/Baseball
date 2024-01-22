@@ -1,19 +1,19 @@
-<<<<<<< HEAD
+
 from flask import Flask, render_template, request
-=======
+
 times_sent = 0
 import random
 from flask import Flask, render_template, request
 from paho.mqtt import client as mqtt_client
 import time
->>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
+
 
 app = Flask(__name__)
 @app.route('/')
 def index():
-<<<<<<< HEAD
+
     return render_template('index.html')
-=======
+
     return render_template('index.html',)
 mode = ""
 broker = "broker.emqx.io"
@@ -60,7 +60,6 @@ def on_message(client, userdata, message):
         one()    
     
 
->>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
 @app.route('/login')
 def login():
     return render_template('login.html')
@@ -77,16 +76,16 @@ def verification():
 def main():
     return render_template('main.html')
 @app.route('/lobby')
-<<<<<<< HEAD
+
 def lobby():    
-=======
+
 def lobby():
     global detection
     client_run = connect()    
     client_run.loop_start()  
     time.sleep(1)
     status = int(detection)
->>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
+
     return render_template('lobby.html')
 @app.route('/arena')
 def arena():
@@ -94,7 +93,7 @@ def arena():
 @app.route('/singleplayer')
 def singleplayer():
     return render_template('singleplayer.html') 
-<<<<<<< HEAD
+
 @app.route('/one')
 def one():
     return render_template('1v1.html')   
@@ -105,7 +104,7 @@ def two():
 def three():
     return render_template('3v3.html') 
 @app.route('/four')
-=======
+
 @app.route('/1v1')
 def one():
     return render_template('1v1.html')   
@@ -116,16 +115,12 @@ def two():
 def three():
     return render_template('3v3.html') 
 @app.route('/4v4')
->>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
+
 def four():
     return render_template('4v4.html') 
 @app.route('/custom')
 def custom():
     return render_template('custom.html') 
-<<<<<<< HEAD
-=======
 
-
->>>>>>> c2e56310737f0e021ce59e9ef9091f1f81fd0ae7
 if __name__ == '__main__':
     app.run(debug=True)
