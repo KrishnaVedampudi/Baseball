@@ -77,8 +77,6 @@ def main():
     return render_template('main.html')
 @app.route('/lobby')
 
-def lobby():    
-
 def lobby():
     global detection
     client_run = connect()    
